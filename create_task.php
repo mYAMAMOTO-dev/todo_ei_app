@@ -23,14 +23,23 @@ if (!empty($errors)) {
 }
 
 // DB接続
-$pdo = new PDO(
-    'mysql:host=localhost;dbname=eisenhower;charset=utf8mb4',
-    'root',
-    ''
-);
+$dsn  = 'mysql:host=127.0.0.1;port=8889;dbname=eisenhower;charset=utf8mb4'; //localhostから変更
+$user = 'root';
+$pass = 'root';
+
+try {
+    $pdo = new PDO($dsn, $user, $pass, [
+        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+    ]);
+} catch (PDOException $e) {
+    echo '接続エラー: ' . $e->getMessage();
+    exit;
+}
 
 // INSERT
-$sql = "INSERT INTO tasks (title, memo, is_important, is_urgent, due_date, created_at)
+$sql =
+    // "INSERT INTO tasks (title, memo, is_important, is_urgent, due_date, created_at)
+    "INSERT INTO eisenhower_tasks (title, memo, is_important, is_urgent, due_date, created_at)
         VALUES (:title, :memo, :imp, :urg, :due, NOW())";
 
 $stmt = $pdo->prepare($sql);
