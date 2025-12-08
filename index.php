@@ -1,3 +1,59 @@
+<!-- 4象限に表示（Read） -->
+
+<?php
+// DB接続
+$dsn  = 'mysql:host=127.0.0.1;port=8889;dbname=eisenhower;charset=utf8mb4';
+$user = 'root';
+$pass = 'root';
+
+$pdo = new PDO($dsn, $user, $pass, [
+    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+]);
+
+// 今日の日付（期限切れ判定用）
+$today = (new DateTime('now', new DateTimeZone('Asia/Tokyo')))->format('Y-m-d');
+
+/**
+ * 象限ごとにタスクを取得する共通関数
+ */
+function fetchTasksByQuadrant(PDO $pdo, string $today, int $isImportant, int $isUrgent): array
+{
+    $sql = "
+      SELECT *
+      FROM eisenhower_tasks
+      WHERE deleted_at IS NULL
+        AND is_important = :imp
+        AND is_urgent = :urg
+      ORDER BY
+        CASE
+          WHEN due_date IS NOT NULL AND due_date < :today THEN 0   -- 期限切れを上に
+          ELSE 1
+        END ASC,
+        CASE
+          WHEN due_date IS NULL THEN 1                             -- 期日なしは最後
+          ELSE 0
+        END ASC,
+        due_date ASC,
+        created_at ASC
+    ";
+
+    $stmt = $pdo->prepare($sql);
+    $stmt->bindValue(':imp', $isImportant, PDO::PARAM_INT);
+    $stmt->bindValue(':urg', $isUrgent, PDO::PARAM_INT);
+    $stmt->bindValue(':today', $today, PDO::PARAM_STR);
+    $stmt->execute();
+
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+// 各象限のタスクを取得
+$tasks_q1 = fetchTasksByQuadrant($pdo, $today, 1, 1); // 重要×緊急
+$tasks_q2 = fetchTasksByQuadrant($pdo, $today, 1, 0); // 重要×緊急でない
+$tasks_q3 = fetchTasksByQuadrant($pdo, $today, 0, 1); // 重要でない×緊急
+$tasks_q4 = fetchTasksByQuadrant($pdo, $today, 0, 0); // 重要でない×緊急でない
+?>
+
+
 <!DOCTYPE html>
 <html lang="ja">
 
