@@ -305,7 +305,7 @@ $tasks_q4 = fetchTasksByQuadrant($pdo, $today, 0, 0); // 重要でない×緊急
 </head>
 
 <body>
-    <h1>アイゼンハワーマトリクス配色プレビュー　レスポンシブル</h1>
+    <h1>アイゼンハワーマトリクス　レスポンシブル</h1>
     <div class="wrapper">
 
         <!-- 登録フォーム -->
@@ -355,10 +355,100 @@ $tasks_q4 = fetchTasksByQuadrant($pdo, $today, 0, 0); // 重要でない×緊急
             <section class="quadrant q1">
                 <h2>すぐやる（重要 × 緊急）</h2>
 
-                <?php if (empty($tasks_q1)): ?>
+                <?php if (empty($tasks_q1)): ?>ƒ
+                <p>タスクはありません</p>
+            <?php else: ?>
+                <?php foreach ($tasks_q1 as $task): ?>
+                    <?php
+                        $isOverdue = !empty($task['due_date']) && $task['due_date'] < $today;
+                    ?>
+                    <div class="card<?php echo $isOverdue ? ' expired' : ''; ?>">
+                        <div class="due">
+                            期日:
+                            <?php echo htmlspecialchars($task['due_date'], ENT_QUOTES, 'UTF-8'); ?>
+                        </div>
+                        <div class="title">
+                            <?php echo htmlspecialchars($task['title'], ENT_QUOTES, 'UTF-8'); ?>
+                        </div>
+                        <div class="memo">
+                            <?php echo htmlspecialchars($task['memo'] ?? '', ENT_QUOTES, 'UTF-8'); ?>
+                        </div>
+                        <button class="button btn-done" data-id="<?php echo (int)$task['id']; ?>">
+                            完了
+                        </button>
+                    </div>
+                <?php endforeach; ?>
+            <?php endif; ?>
+            </section>
+
+            <!-- Q２：計画してやる（重要×緊急でない） -->
+            <section class="quadrant q2">
+                <h2>計画してやる（重要×緊急でない）</h2>
+
+                <?php if (empty($tasks_q2)): ?>
                     <p>タスクはありません</p>
                 <?php else: ?>
-                    <?php foreach ($tasks_q1 as $task): ?>
+                    <?php foreach ($tasks_q2 as $task): ?>
+                        <?php
+                        $isOverdue = !empty($task['due_date']) && $task['due_date'] < $today;
+                        ?>
+                        <div class="card<?php echo $isOverdue ? ' expired' : ''; ?>">
+                            <div class="due">
+                                期日:
+                                <?php echo htmlspecialchars($task['due_date'], ENT_QUOTES, 'UTF-8'); ?>
+                            </div>
+                            <div class="title">
+                                <?php echo htmlspecialchars($task['title'], ENT_QUOTES, 'UTF-8'); ?>
+                            </div>
+                            <div class="memo">
+                                <?php echo htmlspecialchars($task['memo'] ?? '', ENT_QUOTES, 'UTF-8'); ?>
+                            </div>
+                            <button class="button btn-done" data-id="<?php echo (int)$task['id']; ?>">
+                                完了
+                            </button>
+                        </div>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+            </section>
+
+            <!-- Q3：任せる（緊急×重要でない） -->
+            <section class="quadrant q3">
+                <h2>任せる（緊急×重要でない）</h2>
+
+                <?php if (empty($tasks_q3)): ?>
+                    <p>タスクはありません</p>
+                <?php else: ?>
+                    <?php foreach ($tasks_q3 as $task): ?>
+                        <?php
+                        $isOverdue = !empty($task['due_date']) && $task['due_date'] < $today;
+                        ?>
+                        <div class="card<?php echo $isOverdue ? ' expired' : ''; ?>">
+                            <div class="due">
+                                期日:
+                                <?php echo htmlspecialchars($task['due_date'], ENT_QUOTES, 'UTF-8'); ?>
+                            </div>
+                            <div class="title">
+                                <?php echo htmlspecialchars($task['title'], ENT_QUOTES, 'UTF-8'); ?>
+                            </div>
+                            <div class="memo">
+                                <?php echo htmlspecialchars($task['memo'] ?? '', ENT_QUOTES, 'UTF-8'); ?>
+                            </div>
+                            <button class="button btn-done" data-id="<?php echo (int)$task['id']; ?>">
+                                完了
+                            </button>
+                        </div>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+            </section>
+
+            <!-- Q4：やらない（重要でない×緊急でない） -->
+            <section class="quadrant q4">
+                <h2>やらない（重要でない×緊急でない）</h2>
+
+                <?php if (empty($tasks_q4)): ?>
+                    <p>タスクはありません</p>
+                <?php else: ?>
+                    <?php foreach ($tasks_q4 as $task): ?>
                         <?php
                         $isOverdue = !empty($task['due_date']) && $task['due_date'] < $today;
                         ?>
@@ -393,7 +483,7 @@ $tasks_q4 = fetchTasksByQuadrant($pdo, $today, 0, 0); // 重要でない×緊急
                     <div class="due">期日: 11/25</div>会議資料作成<div class="button">完了</div>
                 </div>
             </div> -->
-        <div class="quadrant q2">
+        <!-- <div class="quadrant q2">
             <h2>計画してやる（重要×緊急でない）</h2>
             <div class="card">
                 <div class="due">期日: 11/30</div>新機能設計メモ<div class="button">完了</div>
@@ -410,7 +500,7 @@ $tasks_q4 = fetchTasksByQuadrant($pdo, $today, 0, 0); // 重要でない×緊急
             <div class="card">
                 <div class="due">期日: -</div>古いファイル整理<div class="button">完了</div>
             </div>
-        </div>
+        </div> -->
     </div>
 </body>
 
