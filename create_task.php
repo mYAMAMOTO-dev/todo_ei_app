@@ -8,13 +8,30 @@ $due_date = $_POST['due_date'] ?? '';
 
 $errors = [];
 
+// =========================================
 // バリデーション
+// =========================================
+
+// タスク名必須
 if ($title === '') {
     $errors[] = "タスク名は必須です。";
 }
 
+// 期日必須
 if ($due_date === '') {
     $errors[] = "期日は必須です。";
+}
+
+if (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $due_date)) {
+    $errors[] = "期日の形式が正しくありません。（YYYY-MM-DD）";
+} else {
+    // 実在する日付かチェック
+    $y = (int)substr($due_date, 0, 4);
+    $m = (int)substr($due_date, 5, 2);
+    $d = (int)substr($due_date, 8, 2);
+    if (!checkdate($m, $d, $y)) {
+        $errors[] = "存在しない日付が指定されています。";
+    }
 }
 
 if (!empty($errors)) {

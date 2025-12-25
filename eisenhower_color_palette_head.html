@@ -1,240 +1,51 @@
-<!DOCTYPE html>
-<html lang="ja">
+<form action="create_task.php" method="post" class="task-form">
 
-<head>
-    <meta charset="UTF-8">
-    <title>アイゼンハワーマトリクス配色プレビュー</title>
-    <style>
-        body {
-            background-color: #f6f6f6;
-            font-family: sans-serif;
-            text-align: center;
-            padding: 20px;
-        }
-
-        .quadrant {
-            border-radius: 12px;
-            padding: 20px;
-            color: #333;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        .q1 {
-            background-color: #FFCCCC;
-            color: #660000;
-        }
-
-        .q2 {
-            background-color: #CCEEFF;
-            color: #003366;
-        }
-
-        .q3 {
-            background-color: #FFF0B3;
-            color: #665500;
-        }
-
-        .q4 {
-            background-color: #DDFFDD;
-            color: #004400;
-        }
-
-        .button {
-            display: inline-block;
-            background-color: #2E8B57;
-            color: white;
-            padding: 6px 12px;
-            border-radius: 6px;
-            margin-top: 10px;
-        }
-
-        .expired .due {
-            color: red;
-            opacity: 0.9;
-        }
-
-
-
-
-        /* --------------- */
-        /* ベース：スマホ */
-        /* --------------- */
-
-        *,
-        *::before,
-        *::after {
-            box-sizing: border-box;
-        }
-
-        body {
-            margin: 0;
-            font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-            background-color: #f6f6f6;
-        }
-
-        .wrapper {
-            min-height: 100vh;
-            padding: 16px;
-        }
-
-        /* 4象限コンテナ：まずは1列 */
-        .matrix {
-            display: grid;
-            grid-template-columns: 1fr;
-            /* スマホは1列 */
-            gap: 16px;
-        }
-
-        /* 象限カード（背景色は今のままでOK） */
-        .quadrant {
-            border-radius: 12px;
-            padding: 16px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
-        }
-
-        /* 象限タイトル（常に表示） */
-        .quadrant h2 {
-            margin: 0 0 8px;
-            font-size: 16px;
-        }
-
-        /* 中のタスクカード */
-
-        /* カード本体 */
-        .card {
-            position: relative;
-            background: #fff;
-            border-radius: 8px;
-            padding: 8px 10px 40px;
-            margin-top: 8px;
-            text-align: left;
-        }
-
-        /* 期日・タイトル・メモの共通スタイル */
-        .card .due,
-        .card .title,
-        .card .memo {
-            font-size: 14px;
-            line-height: 1.4;
-        }
-
-        /* メモ1行省略 */
-        .card .memo {
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            display: block;
-            margin-top: 2px;
-        }
-
-        /* 完了ボタン（右下固定） */
-        .card .button,
-        .card .btn-done {
-            position: absolute;
-            right: 10px;
-            bottom: 10px;
-            margin-top: 0;
-            display: inline-block;
-            padding: 4px 10px;
-            border-radius: 999px;
-            border: none;
-            background-color: #2E8B57;
-            color: #fff;
-            font-size: 13px;
-            cursor: pointer;
-        }
-
-
-
-        /* ---------------------- */
-        /* タブレット以上：2列    */
-        /* ---------------------- */
-        @media (min-width: 768px) {
-            .wrapper {
-                padding: 24px;
-            }
-
-            .matrix {
-                grid-template-columns: repeat(2, minmax(0, 1fr));
-                /* 2×2 */
-                gap: 20px;
-                max-width: 900px;
-                margin: 0 auto;
-                /* だんだん中央寄せに寄っていく感じ */
-            }
-
-            .quadrant h2 {
-                font-size: 17px;
-            }
-
-            .card .due,
-            .card .title,
-            .card .memo {
-                font-size: 14px;
-            }
-        }
-
-
-
-
-        /* ---------------------- */
-        /* PC：幅を絞って中央寄せ */
-        /* ---------------------- */
-        @media (min-width: 1200px) {
-            .matrix {
-                max-width: 1000px;
-                /* 横幅を狭くするポイント */
-                gap: 24px;
-            }
-
-            .quadrant {
-                padding: 20px;
-            }
-
-            .quadrant h2 {
-                font-size: 18px;
-            }
-
-            .card .due,
-            .card .title,
-            .card .memo {
-                font-size: 15px;
-            }
-        }
-    </style>
-</head>
-
-<body>
-    <h1>アイゼンハワーマトリクス配色プレビュー　レスポンシブル</h1>
-    <div class="matrix">
-        <div class="quadrant q1">
-            <h2>すぐやる（重要×緊急）</h2>
-            <div class="card expired">
-                <div class="due">期日: 11/20</div>バグ修正対応<div class="button">完了</div>
-            </div>
-            <div class="card">
-                <div class="due">期日: 11/25</div>会議資料作成<div class="button">完了</div>
-            </div>
-        </div>
-        <div class="quadrant q2">
-            <h2>計画してやる（重要×緊急でない）</h2>
-            <div class="card">
-                <div class="due">期日: 11/30</div>新機能設計メモ<div class="button">完了</div>
-            </div>
-        </div>
-        <div class="quadrant q3">
-            <h2>任せる（緊急×重要でない）</h2>
-            <div class="card">
-                <div class="due">期日: 11/28</div>データ入力依頼<div class="button">完了</div>
-            </div>
-        </div>
-        <div class="quadrant q4">
-            <h2>やらない（重要でない×緊急でない）</h2>
-            <div class="card">
-                <div class="due">期日: -</div>古いファイル整理<div class="button">完了</div>
-            </div>
-        </div>
+    <!-- タスク名 -->
+    <div class="form-row">
+        <label for="title">タスク名<span class="required">*</span></label>
+        <input type="text" id="title" name="title" required maxlength="255">
     </div>
-</body>
 
-</html>
+    <!-- メモ -->
+    <div class="form-row">
+        <label for="memo">メモ</label>
+        <textarea id="memo" name="memo" rows="2"></textarea>
+    </div>
+
+    <!-- 重要かどうか -->
+    <div class="form-row">
+        <span class="label">重要度<span class="required">*</span></span>
+        <label>
+            <input type="radio" name="is_important" value="1" checked>
+            重要
+        </label>
+        <label>
+            <input type="radio" name="is_important" value="0">
+            重要ではない
+        </label>
+    </div>
+
+    <!-- 緊急かどうか -->
+    <div class="form-row">
+        <span class="label">緊急度<span class="required">*</span></span>
+        <label>
+            <input type="radio" name="is_urgent" value="1" checked>
+            緊急
+        </label>
+        <label>
+            <input type="radio" name="is_urgent" value="0">
+            緊急ではない
+        </label>
+    </div>
+
+    <!-- 期日 -->
+    <div class="form-row">
+        <label for="due_date">期日<span class="required">*</span></label>
+        <input type="date" id="due_date" name="due_date" required>
+    </div>
+
+    <!-- 登録ボタン -->
+    <div class="form-row form-row-submit">
+        <button type="submit">登録</button>
+    </div>
+</form>
