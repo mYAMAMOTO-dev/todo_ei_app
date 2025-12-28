@@ -1,6 +1,14 @@
 <!-- 4象限に表示（Read） -->
 
 <?php
+session_start();
+
+$form_errors = $_SESSION['form_errors'] ?? [];
+$form_inputs = $_SESSION['form_inputs'] ?? [];
+
+unset($_SESSION['form_errors'], $_SESSION['form_inputs']);
+
+
 // DB接続
 $dsn  = 'mysql:host=127.0.0.1;port=8889;dbname=eisenhower;charset=utf8mb4';
 $user = 'root';
@@ -10,8 +18,10 @@ $pdo = new PDO($dsn, $user, $pass, [
     PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
 ]);
 
+
 // 今日の日付（期限切れ判定用）
 $today = (new DateTime('now', new DateTimeZone('Asia/Tokyo')))->format('Y-m-d');
+
 
 /**
  * 象限ごとにタスクを取得する共通関数
@@ -313,13 +323,27 @@ $tasks_q4 = fetchTasksByQuadrant($pdo, $today, 0, 0); // 重要でない×緊急
             <!-- タスク名 -->
             <div class="form-row">
                 <label for="title">タスク名<span class="required">*</span></label>
-                <input type="text" id="title" name="title" maxlength="24" required>
+                <!-- <input type="text" id="title" name="title" maxlength="24" required> -->
+                <input type="text"
+                    id="title"
+                    name="title"
+                    maxlength="24"
+                    value="<?php echo htmlspecialchars($form_inputs['title'] ?? '', ENT_QUOTES); ?>"
+                    required>
+
+                <?php if (!empty($form_errors['title'])): ?>
+                    <div class="field-error">
+                        <?php echo htmlspecialchars($form_errors['title'], ENT_QUOTES); ?>
+                    </div>
+                <?php endif; ?>
+
             </div>
 
             <!-- メモ -->
             <div class="form-row">
                 <label for="memo">メモ</label>
-                <textarea id="memo" name="memo" rows="2"></textarea>
+                <textarea id="memo" name="memo" rows="2"><?php echo htmlspecialchars($form_inputs['memo'] ?? '', ENT_QUOTES); ?></textarea>
+
             </div>
 
             <!-- 重要 -->
@@ -339,7 +363,19 @@ $tasks_q4 = fetchTasksByQuadrant($pdo, $today, 0, 0); // 重要でない×緊急
             <!-- 期日 -->
             <div class="form-row">
                 <label for="due_date">期日<span class="required">*</span></label>
-                <input type="date" id="due_date" name="due_date" required>
+                <!-- <input type="date" id="due_date" name="due_date" required> -->
+                <input type="date"
+                    id="due_date"
+                    name="due_date"
+                    value="<?php echo htmlspecialchars($form_inputs['due_date'] ?? '', ENT_QUOTES); ?>"
+                    required>
+
+                <?php if (!empty($form_errors['due_date'])): ?>
+                    <div class="field-error">
+                        <?php echo htmlspecialchars($form_errors['due_date'], ENT_QUOTES); ?>
+                    </div>
+                <?php endif; ?>
+
             </div>
 
             <!-- 登録 -->
