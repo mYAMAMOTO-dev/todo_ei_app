@@ -363,6 +363,7 @@ $tasks_q4 = fetchTasksByQuadrant($pdo, $today, 0, 0); // 重要でない×緊急
             <!-- 期日 -->
             <div class="form-row">
                 <label for="due_date">期日<span class="required">*</span></label>
+                <!-- Chromeでの手入力がYYYYYY/MM/DDになる。SafariではYYYY/MM/DD。1回目はこのまま進めて、JS導入時に修正する2025/12/28 -->
                 <!-- <input type="date" id="due_date" name="due_date" required> -->
                 <input type="date"
                     id="due_date"
