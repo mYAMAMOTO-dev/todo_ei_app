@@ -16,7 +16,7 @@ if ($start === '' && $end === '' && $preset === '') {
     $end   = $today;
 }
 
-// 「今日 / 1週間 / 1ヶ月」短縮ボタンを作る（今日含む）
+// 「今日 / 1週間 / 1ヶ月/全期間」短縮ボタンを作る（今日含む）
 if ($preset === 'today') {
     $start = $today;
     $end   = $today;
@@ -26,6 +26,10 @@ if ($preset === 'today') {
 } elseif ($preset === 'month') {    // 今日含む30日間：-29日〜今日
     $start = (clone $todayDt)->modify('-29 days')->format('Y-m-d');
     $end   = $today;
+} elseif ($preset === 'all') {
+    // 全期間：日付条件を付けない
+    $start = '';
+    $end   = '';
 }
 
 
@@ -197,6 +201,7 @@ $c4 = count($buckets['q4']);
                 <a href="completed.php?preset=today&q=<?php echo htmlspecialchars($q, ENT_QUOTES); ?>">今日</a>
                 <a href="completed.php?preset=week&q=<?php echo htmlspecialchars($q, ENT_QUOTES); ?>">1週間</a>
                 <a href="completed.php?preset=month&q=<?php echo htmlspecialchars($q, ENT_QUOTES); ?>">1ヶ月</a>
+                <a href="completed.php?preset=all&q=<?php echo htmlspecialchars($q, ENT_QUOTES); ?>">全期間</a>
             </div>
 
 
