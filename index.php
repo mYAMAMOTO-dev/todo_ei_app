@@ -337,6 +337,8 @@ $tasks_q4 = fetchTasksByQuadrant($pdo, $today, 0, 0); // 重要でない×緊急
                     </div>
                 <?php endif; ?>
 
+
+
             </div>
 
             <!-- メモ -->
@@ -383,7 +385,7 @@ $tasks_q4 = fetchTasksByQuadrant($pdo, $today, 0, 0); // 重要でない×緊急
             <div class="form-row-submit">
                 <button type="submit">登録</button>
             </div>
-
+            <p><a href="completed.php">完了済みタスクを見る</a></p>
         </form>
 
         <div class="matrix">
