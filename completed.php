@@ -119,6 +119,11 @@ function quadrantLabel(int $imp, int $urg): string
                         <?php if (!empty($t['memo'])): ?>
                             <div class="memo"><?php echo htmlspecialchars($t['memo'], ENT_QUOTES, 'UTF-8'); ?></div>
                         <?php endif; ?>
+                        <!-- 戻すボタン追加 -->
+                        <form action="restore_task.php" method="post" style="margin-top:8px;">
+                            <input type="hidden" name="id" value="<?php echo (int)$t['id']; ?>">
+                            <button type="submit">未完了に戻す</button>
+                        </form>
                     </div>
                 <?php endforeach; ?>
             <?php endif; ?>
