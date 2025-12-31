@@ -410,9 +410,15 @@ $tasks_q4 = fetchTasksByQuadrant($pdo, $today, 0, 0); // 重要でない×緊急
                         <div class="memo">
                             <?php echo htmlspecialchars($task['memo'] ?? '', ENT_QUOTES, 'UTF-8'); ?>
                         </div>
-                        <button class="button btn-done" data-id="<?php echo (int)$task['id']; ?>">
+                        <!-- 完了ボタンを “form POST” に -->
+                        <form action="complete_task.php" method="post">
+                            <input type="hidden" name="id" value="<?php echo (int)$task['id']; ?>">
+                            <button type="submit" class="button btn-done">完了</button>
+                        </form>
+                        <!-- <button class="button btn-done" data-id="<?php echo (int)$task['id']; ?>">
                             完了
-                        </button>
+                        </button> -->
+
                     </div>
                 <?php endforeach; ?>
             <?php endif; ?>
@@ -440,9 +446,11 @@ $tasks_q4 = fetchTasksByQuadrant($pdo, $today, 0, 0); // 重要でない×緊急
                             <div class="memo">
                                 <?php echo htmlspecialchars($task['memo'] ?? '', ENT_QUOTES, 'UTF-8'); ?>
                             </div>
-                            <button class="button btn-done" data-id="<?php echo (int)$task['id']; ?>">
-                                完了
-                            </button>
+                            <form action="complete_task.php" method="post">
+                                <input type="hidden" name="id" value="<?php echo (int)$task['id']; ?>">
+                                <button type="submit" class="button btn-done">完了</button>
+                            </form>
+
                         </div>
                     <?php endforeach; ?>
                 <?php endif; ?>
@@ -470,9 +478,11 @@ $tasks_q4 = fetchTasksByQuadrant($pdo, $today, 0, 0); // 重要でない×緊急
                             <div class="memo">
                                 <?php echo htmlspecialchars($task['memo'] ?? '', ENT_QUOTES, 'UTF-8'); ?>
                             </div>
-                            <button class="button btn-done" data-id="<?php echo (int)$task['id']; ?>">
-                                完了
-                            </button>
+                            <form action="complete_task.php" method="post">
+                                <input type="hidden" name="id" value="<?php echo (int)$task['id']; ?>">
+                                <button type="submit" class="button btn-done">完了</button>
+                            </form>
+
                         </div>
                     <?php endforeach; ?>
                 <?php endif; ?>
@@ -500,9 +510,11 @@ $tasks_q4 = fetchTasksByQuadrant($pdo, $today, 0, 0); // 重要でない×緊急
                             <div class="memo">
                                 <?php echo htmlspecialchars($task['memo'] ?? '', ENT_QUOTES, 'UTF-8'); ?>
                             </div>
-                            <button class="button btn-done" data-id="<?php echo (int)$task['id']; ?>">
-                                完了
-                            </button>
+                            <form action="complete_task.php" method="post">
+                                <input type="hidden" name="id" value="<?php echo (int)$task['id']; ?>">
+                                <button type="submit" class="button btn-done">完了</button>
+                            </form>
+
                         </div>
                     <?php endforeach; ?>
                 <?php endif; ?>
