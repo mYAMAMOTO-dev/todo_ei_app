@@ -5,6 +5,29 @@
 $start = $_GET['start'] ?? '';  // 例: 2025-12-01
 $end   = $_GET['end'] ?? '';    // 例: 2025-12-31
 $q     = $_GET['q'] ?? 'all';   // all / q1 / q2 / q3 / q4
+$preset = $_GET['preset'] ?? '';
+
+$todayDt = new DateTime('now', new DateTimeZone('Asia/Tokyo'));
+$today   = $todayDt->format('Y-m-d');
+
+// 初期表示：今日
+if ($start === '' && $end === '' && $preset === '') {
+    $start = $today;
+    $end   = $today;
+}
+
+// 「今日 / 1週間 / 1ヶ月」短縮ボタンを作る（今日含む）
+if ($preset === 'today') {
+    $start = $today;
+    $end   = $today;
+} elseif ($preset === 'week') {     // 今日含む7日間：-6日〜今日
+    $start = (clone $todayDt)->modify('-6 days')->format('Y-m-d');
+    $end   = $today;
+} elseif ($preset === 'month') {    // 今日含む30日間：-29日〜今日
+    $start = (clone $todayDt)->modify('-29 days')->format('Y-m-d');
+    $end   = $today;
+}
+
 
 // DB接続（index.phpと同じ）
 $dsn  = 'mysql:host=127.0.0.1;port=8889;dbname=eisenhower;charset=utf8mb4';
@@ -168,6 +191,14 @@ $c4 = count($buckets['q4']);
             <label>終了日:
                 <input type="date" name="end" value="<?php echo htmlspecialchars($end, ENT_QUOTES); ?>">
             </label>
+
+            <!-- 「今日 / 1週間 / 1ヶ月」短縮ボタンを作る（今日含む） -->
+            <div style="margin:12px 0;">
+                <a href="completed.php?preset=today&q=<?php echo htmlspecialchars($q, ENT_QUOTES); ?>">今日</a>
+                <a href="completed.php?preset=week&q=<?php echo htmlspecialchars($q, ENT_QUOTES); ?>">1週間</a>
+                <a href="completed.php?preset=month&q=<?php echo htmlspecialchars($q, ENT_QUOTES); ?>">1ヶ月</a>
+            </div>
+
 
             <label>象限:
                 <select name="q">
