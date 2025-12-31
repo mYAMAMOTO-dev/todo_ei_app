@@ -32,6 +32,14 @@ if ($preset === 'today') {
     $end   = '';
 }
 
+// ボタンの選択状態（表示用）
+$activePreset = $preset;
+
+// 手入力で start/end が来ていて、presetが空なら「custom」
+if ($activePreset === '' && ($start !== '' || $end !== '')) {
+    $activePreset = 'custom';
+}
+
 
 // DB接続（index.phpと同じ）
 $dsn  = 'mysql:host=127.0.0.1;port=8889;dbname=eisenhower;charset=utf8mb4';
@@ -179,6 +187,11 @@ $c4 = count($buckets['q4']);
             padding: 16px;
             color: #555;
         }
+
+        .is-active {
+            font-weight: 700;
+            text-decoration: underline;
+        }
     </style>
 </head>
 
@@ -196,13 +209,33 @@ $c4 = count($buckets['q4']);
                 <input type="date" name="end" value="<?php echo htmlspecialchars($end, ENT_QUOTES); ?>">
             </label>
 
-            <!-- 「今日 / 1週間 / 1ヶ月」短縮ボタンを作る（今日含む） -->
+            <!-- 「今日 / 1週間 / 1ヶ月」短縮ボタンを作る（今日含む）
             <div style="margin:12px 0;">
                 <a href="completed.php?preset=today&q=<?php echo htmlspecialchars($q, ENT_QUOTES); ?>">今日</a>
                 <a href="completed.php?preset=week&q=<?php echo htmlspecialchars($q, ENT_QUOTES); ?>">1週間</a>
                 <a href="completed.php?preset=month&q=<?php echo htmlspecialchars($q, ENT_QUOTES); ?>">1ヶ月</a>
                 <a href="completed.php?preset=all&q=<?php echo htmlspecialchars($q, ENT_QUOTES); ?>">全期間</a>
+            </div> -->
+
+            <!-- 「今日 / 1週間 / 1ヶ月/全期間」短縮ボタンを作る（今日含む）アクティブは強調 -->
+            <div style="margin:12px 0;">
+                <a class="<?php echo ($activePreset === 'today') ? 'is-active' : ''; ?>"
+                    href="completed.php?preset=today&q=<?php echo htmlspecialchars($q, ENT_QUOTES); ?>">今日</a>
+
+                <a class="<?php echo ($activePreset === 'week') ? 'is-active' : ''; ?>"
+                    href="completed.php?preset=week&q=<?php echo htmlspecialchars($q, ENT_QUOTES); ?>">1週間</a>
+
+                <a class="<?php echo ($activePreset === 'month') ? 'is-active' : ''; ?>"
+                    href="completed.php?preset=month&q=<?php echo htmlspecialchars($q, ENT_QUOTES); ?>">1ヶ月</a>
+
+                <a class="<?php echo ($activePreset === 'all') ? 'is-active' : ''; ?>"
+                    href="completed.php?preset=all&q=<?php echo htmlspecialchars($q, ENT_QUOTES); ?>">全期間</a>
+
+                <?php if ($activePreset === 'custom'): ?>
+                    <span style="margin-left:8px;">（カスタム）</span>
+                <?php endif; ?>
             </div>
+
 
 
             <label>象限:
