@@ -35,11 +35,31 @@ if ($preset === 'today') {
 // ボタンの選択状態（表示用）
 $activePreset = $preset;
 
-// 手入力で start/end が来ていて、presetが空なら「custom」
-if ($activePreset === '' && ($start !== '' || $end !== '')) {
-    $activePreset = 'custom';
-}
+// 表示モード名（常に表示する）
+$modeLabel = '';
 
+if ($activePreset === 'today')  $modeLabel = '今日';
+elseif ($activePreset === 'week')  $modeLabel = '1週間';
+elseif ($activePreset === 'month') $modeLabel = '1ヶ月';
+elseif ($activePreset === 'all')   $modeLabel = '全期間';
+elseif ($activePreset === 'custom') $modeLabel = 'カスタム';
+
+
+// presetが空のときは、start/endの内容から推測する
+if ($activePreset === '') {
+    // どちらも今日なら「今日」扱い
+    if ($start === $today && $end === $today) {
+        $activePreset = 'today';
+    }
+    // 両方空なら「全期間」扱い（allボタンの状態に揃える）
+    elseif ($start === '' && $end === '') {
+        $activePreset = 'all';
+    }
+    // それ以外は「カスタム」
+    else {
+        $activePreset = 'custom';
+    }
+}
 
 // DB接続（index.phpと同じ）
 $dsn  = 'mysql:host=127.0.0.1;port=8889;dbname=eisenhower;charset=utf8mb4';
@@ -174,7 +194,7 @@ $c4 = count($buckets['q4']);
         }
 
         .title {
-            font-weight: 700;
+            aijiyu font-weight: 700;
         }
 
         .memo {
@@ -209,13 +229,6 @@ $c4 = count($buckets['q4']);
                 <input type="date" name="end" value="<?php echo htmlspecialchars($end, ENT_QUOTES); ?>">
             </label>
 
-            <!-- 「今日 / 1週間 / 1ヶ月」短縮ボタンを作る（今日含む）
-            <div style="margin:12px 0;">
-                <a href="completed.php?preset=today&q=<?php echo htmlspecialchars($q, ENT_QUOTES); ?>">今日</a>
-                <a href="completed.php?preset=week&q=<?php echo htmlspecialchars($q, ENT_QUOTES); ?>">1週間</a>
-                <a href="completed.php?preset=month&q=<?php echo htmlspecialchars($q, ENT_QUOTES); ?>">1ヶ月</a>
-                <a href="completed.php?preset=all&q=<?php echo htmlspecialchars($q, ENT_QUOTES); ?>">全期間</a>
-            </div> -->
 
             <!-- 「今日 / 1週間 / 1ヶ月/全期間」短縮ボタンを作る（今日含む）アクティブは強調 -->
             <div style="margin:12px 0;">
@@ -236,6 +249,11 @@ $c4 = count($buckets['q4']);
                 <?php endif; ?>
             </div>
 
+            <!-- 「現在：〇〇」を常に表示 -->
+            <div style="margin:6px 0 10px;">
+                現在：<?php echo htmlspecialchars($modeLabel, ENT_QUOTES); ?>
+                （<?php echo htmlspecialchars($start ?: '未指定', ENT_QUOTES); ?> 〜 <?php echo htmlspecialchars($end ?: '未指定', ENT_QUOTES); ?>）
+            </div>
 
 
             <label>象限:
