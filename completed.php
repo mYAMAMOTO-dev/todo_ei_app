@@ -9,6 +9,8 @@ $preset = $_GET['preset'] ?? '';
 
 $todayDt = new DateTime('now', new DateTimeZone('Asia/Tokyo'));
 $today   = $todayDt->format('Y-m-d');
+$todayMinus6  = (clone $todayDt)->modify('-6 days')->format('Y-m-d');
+$todayMinus29 = (clone $todayDt)->modify('-29 days')->format('Y-m-d');
 
 // 初期表示：今日
 if ($start === '' && $end === '' && $preset === '') {
@@ -21,10 +23,10 @@ if ($preset === 'today') {
     $start = $today;
     $end   = $today;
 } elseif ($preset === 'week') {     // 今日含む7日間：-6日〜今日
-    $start = (clone $todayDt)->modify('-6 days')->format('Y-m-d');
+    $start = $todayMinus6;
     $end   = $today;
 } elseif ($preset === 'month') {    // 今日含む30日間：-29日〜今日
-    $start = (clone $todayDt)->modify('-29 days')->format('Y-m-d');
+    $start = $todayMinus29;
     $end   = $today;
 } elseif ($preset === 'all') {
     // 全期間：日付条件を付けない
@@ -50,6 +52,14 @@ if ($activePreset === '') {
     // どちらも今日なら「今日」扱い
     if ($start === $today && $end === $today) {
         $activePreset = 'today';
+    }
+    // 今日含む7日間：-6日〜今日
+    elseif ($start === $todayMinus6 && $end === $today) {
+        $activePreset = 'week';
+    }
+    // 今日含む30日間：-29日〜今日
+    elseif ($start === $todayMinus29 && $end === $today) {
+        $activePreset = 'month';
     }
     // 両方空なら「全期間」扱い（allボタンの状態に揃える）
     elseif ($start === '' && $end === '') {
