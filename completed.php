@@ -18,7 +18,7 @@ if ($start === '' && $end === '' && $preset === '') {
     $end   = $today;
 }
 
-// 「今日 / 1週間 / 1ヶ月/全期間」短縮ボタンを作る（今日含む）
+// 「今日 / 1週間 / 1ヶ月/全期間」短縮ボタンを作る（今日含む）。プリセットが指定されているなら start/end を上書き
 if ($preset === 'today') {
     $start = $today;
     $end   = $today;
@@ -34,18 +34,8 @@ if ($preset === 'today') {
     $end   = '';
 }
 
-// ボタンの選択状態（表示用）
+// ボタンの選択状態（表示用）：どのボタンをアクティブにするか（preset優先、無ければ推測）
 $activePreset = $preset;
-
-// 表示モード名（常に表示する）
-$modeLabel = '';
-
-if ($activePreset === 'today')  $modeLabel = '今日';
-elseif ($activePreset === 'week')  $modeLabel = '1週間';
-elseif ($activePreset === 'month') $modeLabel = '1ヶ月';
-elseif ($activePreset === 'all')   $modeLabel = '全期間';
-elseif ($activePreset === 'custom') $modeLabel = 'カスタム';
-
 
 // presetが空のときは、start/endの内容から推測する
 if ($activePreset === '') {
@@ -70,6 +60,15 @@ if ($activePreset === '') {
         $activePreset = 'custom';
     }
 }
+
+// 表示モード名（常に表示する）（activePresetが確定してから作る）
+$modeLabel = '';
+
+if ($activePreset === 'today')  $modeLabel = '今日';
+elseif ($activePreset === 'week')  $modeLabel = '1週間';
+elseif ($activePreset === 'month') $modeLabel = '1ヶ月';
+elseif ($activePreset === 'all')   $modeLabel = '全期間';
+elseif ($activePreset === 'custom') $modeLabel = 'カスタム';
 
 // DB接続（index.phpと同じ）
 $dsn  = 'mysql:host=127.0.0.1;port=8889;dbname=eisenhower;charset=utf8mb4';
