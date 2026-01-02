@@ -418,7 +418,16 @@ $tasks_q4 = fetchTasksByQuadrant($pdo, $today, 0, 0); // 重要でない×緊急
                     <?php
                         $isOverdue = !empty($task['due_date']) && $task['due_date'] < $today;
                     ?>
-                    <div class="card<?php echo $isOverdue ? ' expired' : ''; ?>">
+                    <!-- JSが読み取るためのデータ -->
+                    <div class="card<?php echo $isOverdue ? ' expired' : ''; ?>"
+                        data-id="<?php echo (int)$task['id']; ?>"
+                        data-title="<?php echo htmlspecialchars($task['title'] ?? '', ENT_QUOTES, 'UTF-8'); ?>"
+                        data-memo="<?php echo htmlspecialchars($task['memo'] ?? '', ENT_QUOTES, 'UTF-8'); ?>"
+                        data-due="<?php echo htmlspecialchars($task['due_date'] ?? '', ENT_QUOTES, 'UTF-8'); ?>"
+                        data-imp="<?php echo (int)$task['is_important']; ?>"
+                        data-urg="<?php echo (int)$task['is_urgent']; ?>">
+
+                        <!-- ここは「表示専用」 -->
                         <div class="due">
                             期日:
                             <?php echo htmlspecialchars($task['due_date'], ENT_QUOTES, 'UTF-8'); ?>
@@ -426,6 +435,7 @@ $tasks_q4 = fetchTasksByQuadrant($pdo, $today, 0, 0); // 重要でない×緊急
                         <div class="title">
                             <?php echo htmlspecialchars($task['title'], ENT_QUOTES, 'UTF-8'); ?>
                         </div>
+                        <!-- 一覧では1行省略表示 -->
                         <div class="memo">
                             <?php echo htmlspecialchars($task['memo'] ?? '', ENT_QUOTES, 'UTF-8'); ?>
                         </div>
@@ -437,7 +447,6 @@ $tasks_q4 = fetchTasksByQuadrant($pdo, $today, 0, 0); // 重要でない×緊急
                         <!-- <button class="button btn-done" data-id="<?php echo (int)$task['id']; ?>">
                             完了
                         </button> -->
-
                     </div>
                 <?php endforeach; ?>
             <?php endif; ?>
@@ -454,7 +463,15 @@ $tasks_q4 = fetchTasksByQuadrant($pdo, $today, 0, 0); // 重要でない×緊急
                         <?php
                         $isOverdue = !empty($task['due_date']) && $task['due_date'] < $today;
                         ?>
-                        <div class="card<?php echo $isOverdue ? ' expired' : ''; ?>">
+                        <!-- JSが読み取るためのデータ -->
+                        <div class="card<?php echo $isOverdue ? ' expired' : ''; ?>"
+                            data-id="<?php echo (int)$task['id']; ?>"
+                            data-title="<?php echo htmlspecialchars($task['title'] ?? '', ENT_QUOTES, 'UTF-8'); ?>"
+                            data-memo="<?php echo htmlspecialchars($task['memo'] ?? '', ENT_QUOTES, 'UTF-8'); ?>"
+                            data-due="<?php echo htmlspecialchars($task['due_date'] ?? '', ENT_QUOTES, 'UTF-8'); ?>"
+                            data-imp="<?php echo (int)$task['is_important']; ?>"
+                            data-urg="<?php echo (int)$task['is_urgent']; ?>">
+                            <!-- ここは「表示専用」 -->
                             <div class="due">
                                 期日:
                                 <?php echo htmlspecialchars($task['due_date'], ENT_QUOTES, 'UTF-8'); ?>
@@ -486,7 +503,15 @@ $tasks_q4 = fetchTasksByQuadrant($pdo, $today, 0, 0); // 重要でない×緊急
                         <?php
                         $isOverdue = !empty($task['due_date']) && $task['due_date'] < $today;
                         ?>
-                        <div class="card<?php echo $isOverdue ? ' expired' : ''; ?>">
+                        <!-- JSが読み取るためのデータ -->
+                        <div class="card<?php echo $isOverdue ? ' expired' : ''; ?>"
+                            data-id="<?php echo (int)$task['id']; ?>"
+                            data-title="<?php echo htmlspecialchars($task['title'] ?? '', ENT_QUOTES, 'UTF-8'); ?>"
+                            data-memo="<?php echo htmlspecialchars($task['memo'] ?? '', ENT_QUOTES, 'UTF-8'); ?>"
+                            data-due="<?php echo htmlspecialchars($task['due_date'] ?? '', ENT_QUOTES, 'UTF-8'); ?>"
+                            data-imp="<?php echo (int)$task['is_important']; ?>"
+                            data-urg="<?php echo (int)$task['is_urgent']; ?>">
+                            <!-- ここは「表示専用」 -->
                             <div class="due">
                                 期日:
                                 <?php echo htmlspecialchars($task['due_date'], ENT_QUOTES, 'UTF-8'); ?>
@@ -518,7 +543,15 @@ $tasks_q4 = fetchTasksByQuadrant($pdo, $today, 0, 0); // 重要でない×緊急
                         <?php
                         $isOverdue = !empty($task['due_date']) && $task['due_date'] < $today;
                         ?>
-                        <div class="card<?php echo $isOverdue ? ' expired' : ''; ?>">
+                        <!-- JSが読み取るためのデータ -->
+                        <div class="card<?php echo $isOverdue ? ' expired' : ''; ?>"
+                            data-id="<?php echo (int)$task['id']; ?>"
+                            data-title="<?php echo htmlspecialchars($task['title'] ?? '', ENT_QUOTES, 'UTF-8'); ?>"
+                            data-memo="<?php echo htmlspecialchars($task['memo'] ?? '', ENT_QUOTES, 'UTF-8'); ?>"
+                            data-due="<?php echo htmlspecialchars($task['due_date'] ?? '', ENT_QUOTES, 'UTF-8'); ?>"
+                            data-imp="<?php echo (int)$task['is_important']; ?>"
+                            data-urg="<?php echo (int)$task['is_urgent']; ?>">
+                            <!-- ここは「表示専用」 -->
                             <div class="due">
                                 期日:
                                 <?php echo htmlspecialchars($task['due_date'], ENT_QUOTES, 'UTF-8'); ?>
