@@ -603,6 +603,49 @@ $tasks_q4 = fetchTasksByQuadrant($pdo, $today, 0, 0); // 重要でない×緊急
             </div>
         </div> -->
     </div>
+
+    <!-- =========================
+ 編集用モーダル（最初は非表示）
+========================= -->
+    <div id="editModal" class="modal-overlay" aria-hidden="true">
+
+        <div class="modal">
+
+            <!-- タイトル＋閉じる -->
+            <div class="modal-header">
+                <h3>タスクを編集</h3>
+                <button type="button" id="modalClose">×</button>
+            </div>
+
+            <!-- 更新用フォーム -->
+            <form action="update_task.php" method="post">
+
+                <!-- どのタスクかを識別するID -->
+                <input type="hidden" name="id" id="edit_id">
+
+                <label>タスク名</label>
+                <input type="text" name="title" id="edit_title">
+
+                <label>メモ（全文）</label>
+                <textarea name="memo" id="edit_memo"></textarea>
+
+                <label>重要度</label>
+                <input type="radio" name="is_important" value="1" id="edit_imp_1">重要
+                <input type="radio" name="is_important" value="0" id="edit_imp_0">重要でない
+
+                <label>緊急度</label>
+                <input type="radio" name="is_urgent" value="1" id="edit_urg_1">緊急
+                <input type="radio" name="is_urgent" value="0" id="edit_urg_0">緊急でない
+
+                <label>期日</label>
+                <input type="date" name="due_date" id="edit_due">
+
+                <button type="submit">更新</button>
+            </form>
+        </div>
+    </div>
+
+
 </body>
 
 </html>
