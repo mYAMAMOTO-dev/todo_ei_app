@@ -180,7 +180,6 @@ $tasks_q4 = fetchTasksByQuadrant($pdo, $today, 0, 0); // 重要でない×緊急
             font-size: 14px;
         }
 
-        ＾
         /* --------------- */
         /* ベース：スマホ */
         /* --------------- */
@@ -446,45 +445,45 @@ $tasks_q4 = fetchTasksByQuadrant($pdo, $today, 0, 0); // 重要でない×緊急
             <section class="quadrant q1">
                 <h2>すぐやる（重要 × 緊急）</h2>
 
-                <?php if (empty($tasks_q1)): ?>ƒ
-                <p>タスクはありません</p>
-            <?php else: ?>
-                <?php foreach ($tasks_q1 as $task): ?>
-                    <?php
+                <?php if (empty($tasks_q1)): ?>
+                    <p>タスクはありません</p>
+                <?php else: ?>
+                    <?php foreach ($tasks_q1 as $task): ?>
+                        <?php
                         $isOverdue = !empty($task['due_date']) && $task['due_date'] < $today;
-                    ?>
-                    <!-- JSが読み取るためのデータ -->
-                    <div class="card<?php echo $isOverdue ? ' expired' : ''; ?>"
-                        data-id="<?php echo (int)$task['id']; ?>"
-                        data-title="<?php echo htmlspecialchars($task['title'] ?? '', ENT_QUOTES, 'UTF-8'); ?>"
-                        data-memo="<?php echo htmlspecialchars($task['memo'] ?? '', ENT_QUOTES, 'UTF-8'); ?>"
-                        data-due="<?php echo htmlspecialchars($task['due_date'] ?? '', ENT_QUOTES, 'UTF-8'); ?>"
-                        data-imp="<?php echo (int)$task['is_important']; ?>"
-                        data-urg="<?php echo (int)$task['is_urgent']; ?>">
+                        ?>
+                        <!-- JSが読み取るためのデータ -->
+                        <div class="card<?php echo $isOverdue ? ' expired' : ''; ?>"
+                            data-id="<?php echo (int)$task['id']; ?>"
+                            data-title="<?php echo htmlspecialchars($task['title'] ?? '', ENT_QUOTES, 'UTF-8'); ?>"
+                            data-memo="<?php echo htmlspecialchars($task['memo'] ?? '', ENT_QUOTES, 'UTF-8'); ?>"
+                            data-due="<?php echo htmlspecialchars($task['due_date'] ?? '', ENT_QUOTES, 'UTF-8'); ?>"
+                            data-imp="<?php echo (int)$task['is_important']; ?>"
+                            data-urg="<?php echo (int)$task['is_urgent']; ?>">
 
-                        <!-- ここは「表示専用」 -->
-                        <div class="due">
-                            期日:
-                            <?php echo htmlspecialchars($task['due_date'], ENT_QUOTES, 'UTF-8'); ?>
-                        </div>
-                        <div class="title">
-                            <?php echo htmlspecialchars($task['title'], ENT_QUOTES, 'UTF-8'); ?>
-                        </div>
-                        <!-- 一覧では1行省略表示 -->
-                        <div class="memo">
-                            <?php echo htmlspecialchars($task['memo'] ?? '', ENT_QUOTES, 'UTF-8'); ?>
-                        </div>
-                        <!-- 完了ボタンを “form POST” に -->
-                        <form action="complete_task.php" method="post">
-                            <input type="hidden" name="id" value="<?php echo (int)$task['id']; ?>">
-                            <button type="submit" class="button btn-done">完了</button>
-                        </form>
-                        <!-- <button class="button btn-done" data-id="<?php echo (int)$task['id']; ?>">
+                            <!-- ここは「表示専用」 -->
+                            <div class="due">
+                                期日:
+                                <?php echo htmlspecialchars($task['due_date'], ENT_QUOTES, 'UTF-8'); ?>
+                            </div>
+                            <div class="title">
+                                <?php echo htmlspecialchars($task['title'], ENT_QUOTES, 'UTF-8'); ?>
+                            </div>
+                            <!-- 一覧では1行省略表示 -->
+                            <div class="memo">
+                                <?php echo htmlspecialchars($task['memo'] ?? '', ENT_QUOTES, 'UTF-8'); ?>
+                            </div>
+                            <!-- 完了ボタンを “form POST” に -->
+                            <form action="complete_task.php" method="post">
+                                <input type="hidden" name="id" value="<?php echo (int)$task['id']; ?>">
+                                <button type="submit" class="button btn-done">完了</button>
+                            </form>
+                            <!-- <button class="button btn-done" data-id="<?php echo (int)$task['id']; ?>">
                             完了
                         </button> -->
-                    </div>
-                <?php endforeach; ?>
-            <?php endif; ?>
+                        </div>
+                    <?php endforeach; ?>
+                <?php endif; ?>
             </section>
 
             <!-- Q２：計画してやる（重要×緊急でない） -->
