@@ -1,11 +1,18 @@
 <!-- 4象限に表示（Read） -->
 
 <?php
+// ==============================
+// セッション開始
+// ==============================
 session_start();
+// ==============================
+// バリデーションエラーや入力値の復元用
+// （create_task.php から戻ってきた時用）
+// ==============================
 
 $form_errors = $_SESSION['form_errors'] ?? [];
 $form_inputs = $_SESSION['form_inputs'] ?? [];
-
+// 使い終わったら消す
 unset($_SESSION['form_errors'], $_SESSION['form_inputs']);
 
 
@@ -14,6 +21,7 @@ $dsn  = 'mysql:host=127.0.0.1;port=8889;dbname=eisenhower;charset=utf8mb4';
 $user = 'root';
 $pass = 'root';
 
+// PDOでDB接続（例外モード）
 $pdo = new PDO($dsn, $user, $pass, [
     PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
 ]);
@@ -26,8 +34,17 @@ $today = (new DateTime('now', new DateTimeZone('Asia/Tokyo')))->format('Y-m-d');
 /**
  * 象限ごとにタスクを取得する共通関数
  */
-function fetchTasksByQuadrant(PDO $pdo, string $today, int $isImportant, int $isUrgent): array
-{
+function fetchTasksByQuadrant(
+    PDO $pdo,
+    string $today,
+    int $isImportant,
+    int $isUrgent
+): array {
+
+    // 論理削除されていないタスクだけを取得
+    // 重要度・緊急度で象限を分ける
+    // 期限切れ → 期日なし → 通常 の順で並び替え
+
     $sql = "
       SELECT *
       FROM eisenhower_tasks
@@ -52,7 +69,7 @@ function fetchTasksByQuadrant(PDO $pdo, string $today, int $isImportant, int $is
     $stmt->bindValue(':urg', $isUrgent, PDO::PARAM_INT);
     $stmt->bindValue(':today', $today, PDO::PARAM_STR);
     $stmt->execute();
-
+    // 配列で返す
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
