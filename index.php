@@ -680,6 +680,64 @@ $tasks_q4 = fetchTasksByQuadrant($pdo, $today, 0, 0); // 重要でない×緊急
         </div>
     </div>
 
+    <script>
+        // ==============================
+        // モーダルとフォーム部品を取得
+        // ==============================
+        const modal = document.getElementById('editModal');
+        const closeBtn = document.getElementById('modalClose');
+
+        const editId = document.getElementById('edit_id');
+        const editTitle = document.getElementById('edit_title');
+        const editMemo = document.getElementById('edit_memo');
+        const editDue = document.getElementById('edit_due');
+
+        const imp1 = document.getElementById('edit_imp_1');
+        const imp0 = document.getElementById('edit_imp_0');
+        const urg1 = document.getElementById('edit_urg_1');
+        const urg0 = document.getElementById('edit_urg_0');
+
+        // ==============================
+        // モーダルを開く／閉じる
+        // ==============================
+        function openModal() {
+            modal.classList.add('is-open');
+        }
+
+        function closeModal() {
+            modal.classList.remove('is-open');
+        }
+
+        closeBtn.addEventListener('click', closeModal);
+
+        // ==============================
+        // 各タスクカードにクリックイベントを付ける
+        // ==============================
+        document.querySelectorAll('.card').forEach(card => {
+
+            card.addEventListener('click', (e) => {
+
+                // 完了ボタンを押した時は編集しない
+                if (e.target.closest('form')) return;
+
+                // --------------------------
+                // card の data-* を取得
+                // --------------------------
+                editId.value = card.dataset.id;
+                editTitle.value = card.dataset.title;
+                editMemo.value = card.dataset.memo;
+                editDue.value = card.dataset.due;
+
+                // ラジオボタンの切り替え
+                (card.dataset.imp === '1' ? imp1 : imp0).checked = true;
+                (card.dataset.urg === '1' ? urg1 : urg0).checked = true;
+
+                // モーダルを開く
+                openModal();
+            });
+        });
+    </script>
+
 
 </body>
 
