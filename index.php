@@ -298,11 +298,7 @@ $tasks_q4 = fetchTasksByQuadrant($pdo, $today, 0, 0); // 重要でない×緊急
                 font-size: 14px;
             }
 
-
         }
-
-
-
 
         /* ---------------------- */
         /* PC：幅を絞って中央寄せ */
@@ -327,6 +323,45 @@ $tasks_q4 = fetchTasksByQuadrant($pdo, $today, 0, 0); // 重要でない×緊急
             .card .memo {
                 font-size: 15px;
             }
+        }
+
+        /* ---- modal ---- */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.45);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+            z-index: 9999;
+        }
+
+        .modal-overlay.is-open {
+            display: flex;
+        }
+
+        .modal {
+            width: min(720px, 100%);
+            background: #fff;
+            border-radius: 12px;
+            padding: 14px 16px 16px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+            text-align: left;
+        }
+
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .modal-close {
+            border: none;
+            background: transparent;
+            font-size: 22px;
+            cursor: pointer;
         }
     </style>
 </head>
