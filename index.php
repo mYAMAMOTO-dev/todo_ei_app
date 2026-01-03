@@ -88,13 +88,6 @@ $tasks_q4 = fetchTasksByQuadrant($pdo, $today, 0, 0); // 重要でない×緊急
     <meta charset="UTF-8">
     <title>アイゼンハワーマトリクス配色プレビュー</title>
     <style>
-        .quadrant {
-            border-radius: 12px;
-            padding: 20px;
-            color: #333;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
         .q1 {
             background-color: #FFCCCC;
             color: #660000;
@@ -180,7 +173,6 @@ $tasks_q4 = fetchTasksByQuadrant($pdo, $today, 0, 0); // 重要でない×緊急
             text-align: center;
             background-color: #f6f6f6;
         }
-
 
         .wrapper {
             min-height: 100vh;
@@ -539,7 +531,12 @@ $tasks_q4 = fetchTasksByQuadrant($pdo, $today, 0, 0); // 重要でない×緊急
         } */
 
 
-
+        /* .quadrant {
+            border-radius: 12px;
+            padding: 20px;
+            color: #333;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        } */
 
 
 
