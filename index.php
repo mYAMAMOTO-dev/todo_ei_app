@@ -512,7 +512,7 @@ $tasks_q4 = fetchTasksByQuadrant($pdo, $today, 0, 0); // 重要でない×緊急
         .completed-link-wrap {
             max-width: 900px;
             margin: 0 auto 14px;
-            text-align: left;
+            text-align: right;
         }
 
         .btn-sub {
