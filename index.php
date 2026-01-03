@@ -366,11 +366,12 @@ $tasks_q4 = fetchTasksByQuadrant($pdo, $today, 0, 0); // 重要でない×緊急
 </head>
 
 <body>
-    <h1>アイゼンハワーマトリクス　レスポンシブル</h1>
+    <h1>アイゼンハワーマトリクス</h1>
     <div class="wrapper">
 
         <!-- 登録フォーム -->
         <form action="create_task.php" method="post" class="task-form">
+            <h2>タスク登録</h2>
             <!-- タスク名 -->
             <div class="form-row">
                 <label for="title">タスク名<span class="required">*</span></label>
@@ -436,9 +437,9 @@ $tasks_q4 = fetchTasksByQuadrant($pdo, $today, 0, 0); // 重要でない×緊急
             <div class="form-row-submit">
                 <button type="submit">登録</button>
             </div>
-            <p><a href="completed.php">完了済みタスクを見る</a></p>
-        </form>
 
+        </form>
+        <p><a href="completed.php">完了済みタスクを見る</a></p>
         <div class="matrix">
 
             <!-- Q1：すぐやる（重要×緊急） -->
