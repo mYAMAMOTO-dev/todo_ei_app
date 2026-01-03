@@ -369,248 +369,252 @@ $tasks_q4 = fetchTasksByQuadrant($pdo, $today, 0, 0); // 重要でない×緊急
     <h1>アイゼンハワーマトリクス</h1>
     <div class="wrapper">
 
-        <!-- 登録フォーム -->
-        <form action="create_task.php" method="post" class="task-form">
-            <h2>タスク登録</h2>
-            <!-- タスク名 -->
-            <div class="form-row">
-                <label for="title">タスク名<span class="required">*</span></label>
-                <!-- <input type="text" id="title" name="title" maxlength="24" required> -->
-                <input type="text"
-                    id="title"
-                    name="title"
-                    maxlength="24"
-                    value="<?php echo htmlspecialchars($form_inputs['title'] ?? '', ENT_QUOTES); ?>"
-                    required>
+        <!-- 登録フォーム アコーディオン化-->
+        <div class="task-accordion">
+            <button type="button" class="task-accordion__header">
+                <span>タスク登録</span>
+                <span class="task-accordion__icon">＋</span>
+            </button>
 
-                <?php if (!empty($form_errors['title'])): ?>
-                    <div class="field-error">
-                        <?php echo htmlspecialchars($form_errors['title'], ENT_QUOTES); ?>
+            <div class="task-accordion__body">
+                <form action="create_task.php" method="post" class="task-form">
+                    <!-- タスク名 -->
+                    <div class="form-row">
+                        <label for="title">タスク名<span class="required">*</span></label>
+                        <!-- <input type="text" id="title" name="title" maxlength="24" required> -->
+                        <input type="text"
+                            id="title"
+                            name="title"
+                            maxlength="24"
+                            value="<?php echo htmlspecialchars($form_inputs['title'] ?? '', ENT_QUOTES); ?>"
+                            required>
+
+                        <?php if (!empty($form_errors['title'])): ?>
+                            <div class="field-error">
+                                <?php echo htmlspecialchars($form_errors['title'], ENT_QUOTES); ?>
+                            </div>
+                        <?php endif; ?>
                     </div>
-                <?php endif; ?>
 
-
-
-            </div>
-
-            <!-- メモ -->
-            <div class="form-row">
-                <label for="memo">メモ</label>
-                <textarea id="memo" name="memo" rows="2"><?php echo htmlspecialchars($form_inputs['memo'] ?? '', ENT_QUOTES); ?></textarea>
-
-            </div>
-
-            <!-- 重要 -->
-            <div class="form-row">
-                <span class="label">重要度<span class="required">*</span></span>
-                <label><input type="radio" name="is_important" value="1" checked> 重要</label>
-                <label><input type="radio" name="is_important" value="0"> 重要ではない</label>
-            </div>
-
-            <!-- 緊急 -->
-            <div class="form-row">
-                <span class="label">緊急度<span class="required">*</span></span>
-                <label><input type="radio" name="is_urgent" value="1" checked> 緊急</label>
-                <label><input type="radio" name="is_urgent" value="0"> 緊急ではない</label>
-            </div>
-
-            <!-- 期日 -->
-            <div class="form-row">
-                <label for="due_date">期日<span class="required">*</span></label>
-                <!-- Chromeでの手入力がYYYYYY/MM/DDになる。SafariではYYYY/MM/DD。1回目はこのまま進めて、JS導入時に修正する2025/12/28 -->
-                <!-- <input type="date" id="due_date" name="due_date" required> -->
-                <input type="date"
-                    id="due_date"
-                    name="due_date"
-                    value="<?php echo htmlspecialchars($form_inputs['due_date'] ?? '', ENT_QUOTES); ?>"
-                    required>
-
-                <?php if (!empty($form_errors['due_date'])): ?>
-                    <div class="field-error">
-                        <?php echo htmlspecialchars($form_errors['due_date'], ENT_QUOTES); ?>
+                    <!-- メモ -->
+                    <div class="form-row">
+                        <label for="memo">メモ</label>
+                        <textarea id="memo" name="memo" rows="2"><?php echo htmlspecialchars($form_inputs['memo'] ?? '', ENT_QUOTES); ?></textarea>
                     </div>
-                <?php endif; ?>
 
+                    <!-- 重要 -->
+                    <div class="form-row">
+                        <span class="label">重要度<span class="required">*</span></span>
+                        <label><input type="radio" name="is_important" value="1" checked> 重要</label>
+                        <label><input type="radio" name="is_important" value="0"> 重要ではない</label>
+                    </div>
+
+                    <!-- 緊急 -->
+                    <div class="form-row">
+                        <span class="label">緊急度<span class="required">*</span></span>
+                        <label><input type="radio" name="is_urgent" value="1" checked> 緊急</label>
+                        <label><input type="radio" name="is_urgent" value="0"> 緊急ではない</label>
+                    </div>
+
+                    <!-- 期日 -->
+                    <div class="form-row">
+                        <label for="due_date">期日<span class="required">*</span></label>
+                        <!-- Chromeでの手入力がYYYYYY/MM/DDになる。SafariではYYYY/MM/DD。1回目はこのまま進めて、JS導入時に修正する2025/12/28 -->
+                        <!-- <input type="date" id="due_date" name="due_date" required> -->
+                        <input type="date"
+                            id="due_date"
+                            name="due_date"
+                            value="<?php echo htmlspecialchars($form_inputs['due_date'] ?? '', ENT_QUOTES); ?>"
+                            required>
+
+                        <?php if (!empty($form_errors['due_date'])): ?>
+                            <div class="field-error">
+                                <?php echo htmlspecialchars($form_errors['due_date'], ENT_QUOTES); ?>
+                            </div>
+                        <?php endif; ?>
+
+                    </div>
+
+                    <!-- 登録 -->
+                    <div class="form-row-submit">
+                        <button type="submit">登録</button>
+                    </div>
+
+                </form>
             </div>
 
-            <!-- 登録 -->
-            <div class="form-row-submit">
-                <button type="submit">登録</button>
-            </div>
+            <p><a href="completed.php">完了済みタスクを見る</a></p>
+            <div class="matrix">
 
-        </form>
-        <p><a href="completed.php">完了済みタスクを見る</a></p>
-        <div class="matrix">
+                <!-- Q1：すぐやる（重要×緊急） -->
+                <section class="quadrant q1">
+                    <h2>すぐやる（重要 × 緊急）</h2>
 
-            <!-- Q1：すぐやる（重要×緊急） -->
-            <section class="quadrant q1">
-                <h2>すぐやる（重要 × 緊急）</h2>
+                    <?php if (empty($tasks_q1)): ?>
+                        <p>タスクはありません</p>
+                    <?php else: ?>
+                        <?php foreach ($tasks_q1 as $task): ?>
+                            <?php
+                            $isOverdue = !empty($task['due_date']) && $task['due_date'] < $today;
+                            ?>
+                            <!-- JSが読み取るためのデータ -->
+                            <div class="card<?php echo $isOverdue ? ' expired' : ''; ?>"
+                                data-id="<?php echo (int)$task['id']; ?>"
+                                data-title="<?php echo htmlspecialchars($task['title'] ?? '', ENT_QUOTES, 'UTF-8'); ?>"
+                                data-memo="<?php echo htmlspecialchars($task['memo'] ?? '', ENT_QUOTES, 'UTF-8'); ?>"
+                                data-due="<?php echo htmlspecialchars($task['due_date'] ?? '', ENT_QUOTES, 'UTF-8'); ?>"
+                                data-imp="<?php echo (int)$task['is_important']; ?>"
+                                data-urg="<?php echo (int)$task['is_urgent']; ?>">
 
-                <?php if (empty($tasks_q1)): ?>
-                    <p>タスクはありません</p>
-                <?php else: ?>
-                    <?php foreach ($tasks_q1 as $task): ?>
-                        <?php
-                        $isOverdue = !empty($task['due_date']) && $task['due_date'] < $today;
-                        ?>
-                        <!-- JSが読み取るためのデータ -->
-                        <div class="card<?php echo $isOverdue ? ' expired' : ''; ?>"
-                            data-id="<?php echo (int)$task['id']; ?>"
-                            data-title="<?php echo htmlspecialchars($task['title'] ?? '', ENT_QUOTES, 'UTF-8'); ?>"
-                            data-memo="<?php echo htmlspecialchars($task['memo'] ?? '', ENT_QUOTES, 'UTF-8'); ?>"
-                            data-due="<?php echo htmlspecialchars($task['due_date'] ?? '', ENT_QUOTES, 'UTF-8'); ?>"
-                            data-imp="<?php echo (int)$task['is_important']; ?>"
-                            data-urg="<?php echo (int)$task['is_urgent']; ?>">
-
-                            <!-- ここは「表示専用」 -->
-                            <div class="due">
-                                期日:
-                                <?php echo htmlspecialchars($task['due_date'], ENT_QUOTES, 'UTF-8'); ?>
-                            </div>
-                            <div class="title">
-                                <?php echo htmlspecialchars($task['title'], ENT_QUOTES, 'UTF-8'); ?>
-                            </div>
-                            <!-- 一覧では1行省略表示 -->
-                            <div class="memo">
-                                <?php echo htmlspecialchars($task['memo'] ?? '', ENT_QUOTES, 'UTF-8'); ?>
-                            </div>
-                            <!-- 完了ボタンを “form POST” に -->
-                            <form action="complete_task.php" method="post">
-                                <input type="hidden" name="id" value="<?php echo (int)$task['id']; ?>">
-                                <button type="submit" class="button btn-done">完了</button>
-                            </form>
-                            <!-- <button class="button btn-done" data-id="<?php echo (int)$task['id']; ?>">
+                                <!-- ここは「表示専用」 -->
+                                <div class="due">
+                                    期日:
+                                    <?php echo htmlspecialchars($task['due_date'], ENT_QUOTES, 'UTF-8'); ?>
+                                </div>
+                                <div class="title">
+                                    <?php echo htmlspecialchars($task['title'], ENT_QUOTES, 'UTF-8'); ?>
+                                </div>
+                                <!-- 一覧では1行省略表示 -->
+                                <div class="memo">
+                                    <?php echo htmlspecialchars($task['memo'] ?? '', ENT_QUOTES, 'UTF-8'); ?>
+                                </div>
+                                <!-- 完了ボタンを “form POST” に -->
+                                <form action="complete_task.php" method="post">
+                                    <input type="hidden" name="id" value="<?php echo (int)$task['id']; ?>">
+                                    <button type="submit" class="button btn-done">完了</button>
+                                </form>
+                                <!-- <button class="button btn-done" data-id="<?php echo (int)$task['id']; ?>">
                             完了
                         </button> -->
-                        </div>
-                    <?php endforeach; ?>
-                <?php endif; ?>
-            </section>
-
-            <!-- Q２：計画してやる（重要×緊急でない） -->
-            <section class="quadrant q2">
-                <h2>計画してやる（重要×緊急でない）</h2>
-
-                <?php if (empty($tasks_q2)): ?>
-                    <p>タスクはありません</p>
-                <?php else: ?>
-                    <?php foreach ($tasks_q2 as $task): ?>
-                        <?php
-                        $isOverdue = !empty($task['due_date']) && $task['due_date'] < $today;
-                        ?>
-                        <!-- JSが読み取るためのデータ -->
-                        <div class="card<?php echo $isOverdue ? ' expired' : ''; ?>"
-                            data-id="<?php echo (int)$task['id']; ?>"
-                            data-title="<?php echo htmlspecialchars($task['title'] ?? '', ENT_QUOTES, 'UTF-8'); ?>"
-                            data-memo="<?php echo htmlspecialchars($task['memo'] ?? '', ENT_QUOTES, 'UTF-8'); ?>"
-                            data-due="<?php echo htmlspecialchars($task['due_date'] ?? '', ENT_QUOTES, 'UTF-8'); ?>"
-                            data-imp="<?php echo (int)$task['is_important']; ?>"
-                            data-urg="<?php echo (int)$task['is_urgent']; ?>">
-                            <!-- ここは「表示専用」 -->
-                            <div class="due">
-                                期日:
-                                <?php echo htmlspecialchars($task['due_date'], ENT_QUOTES, 'UTF-8'); ?>
                             </div>
-                            <div class="title">
-                                <?php echo htmlspecialchars($task['title'], ENT_QUOTES, 'UTF-8'); ?>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                </section>
+
+                <!-- Q２：計画してやる（重要×緊急でない） -->
+                <section class="quadrant q2">
+                    <h2>計画してやる（重要×緊急でない）</h2>
+
+                    <?php if (empty($tasks_q2)): ?>
+                        <p>タスクはありません</p>
+                    <?php else: ?>
+                        <?php foreach ($tasks_q2 as $task): ?>
+                            <?php
+                            $isOverdue = !empty($task['due_date']) && $task['due_date'] < $today;
+                            ?>
+                            <!-- JSが読み取るためのデータ -->
+                            <div class="card<?php echo $isOverdue ? ' expired' : ''; ?>"
+                                data-id="<?php echo (int)$task['id']; ?>"
+                                data-title="<?php echo htmlspecialchars($task['title'] ?? '', ENT_QUOTES, 'UTF-8'); ?>"
+                                data-memo="<?php echo htmlspecialchars($task['memo'] ?? '', ENT_QUOTES, 'UTF-8'); ?>"
+                                data-due="<?php echo htmlspecialchars($task['due_date'] ?? '', ENT_QUOTES, 'UTF-8'); ?>"
+                                data-imp="<?php echo (int)$task['is_important']; ?>"
+                                data-urg="<?php echo (int)$task['is_urgent']; ?>">
+                                <!-- ここは「表示専用」 -->
+                                <div class="due">
+                                    期日:
+                                    <?php echo htmlspecialchars($task['due_date'], ENT_QUOTES, 'UTF-8'); ?>
+                                </div>
+                                <div class="title">
+                                    <?php echo htmlspecialchars($task['title'], ENT_QUOTES, 'UTF-8'); ?>
+                                </div>
+                                <div class="memo">
+                                    <?php echo htmlspecialchars($task['memo'] ?? '', ENT_QUOTES, 'UTF-8'); ?>
+                                </div>
+                                <form action="complete_task.php" method="post">
+                                    <input type="hidden" name="id" value="<?php echo (int)$task['id']; ?>">
+                                    <button type="submit" class="button btn-done">完了</button>
+                                </form>
+
                             </div>
-                            <div class="memo">
-                                <?php echo htmlspecialchars($task['memo'] ?? '', ENT_QUOTES, 'UTF-8'); ?>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                </section>
+
+                <!-- Q3：任せる（緊急×重要でない） -->
+                <section class="quadrant q3">
+                    <h2>任せる（緊急×重要でない）</h2>
+
+                    <?php if (empty($tasks_q3)): ?>
+                        <p>タスクはありません</p>
+                    <?php else: ?>
+                        <?php foreach ($tasks_q3 as $task): ?>
+                            <?php
+                            $isOverdue = !empty($task['due_date']) && $task['due_date'] < $today;
+                            ?>
+                            <!-- JSが読み取るためのデータ -->
+                            <div class="card<?php echo $isOverdue ? ' expired' : ''; ?>"
+                                data-id="<?php echo (int)$task['id']; ?>"
+                                data-title="<?php echo htmlspecialchars($task['title'] ?? '', ENT_QUOTES, 'UTF-8'); ?>"
+                                data-memo="<?php echo htmlspecialchars($task['memo'] ?? '', ENT_QUOTES, 'UTF-8'); ?>"
+                                data-due="<?php echo htmlspecialchars($task['due_date'] ?? '', ENT_QUOTES, 'UTF-8'); ?>"
+                                data-imp="<?php echo (int)$task['is_important']; ?>"
+                                data-urg="<?php echo (int)$task['is_urgent']; ?>">
+                                <!-- ここは「表示専用」 -->
+                                <div class="due">
+                                    期日:
+                                    <?php echo htmlspecialchars($task['due_date'], ENT_QUOTES, 'UTF-8'); ?>
+                                </div>
+                                <div class="title">
+                                    <?php echo htmlspecialchars($task['title'], ENT_QUOTES, 'UTF-8'); ?>
+                                </div>
+                                <div class="memo">
+                                    <?php echo htmlspecialchars($task['memo'] ?? '', ENT_QUOTES, 'UTF-8'); ?>
+                                </div>
+                                <form action="complete_task.php" method="post">
+                                    <input type="hidden" name="id" value="<?php echo (int)$task['id']; ?>">
+                                    <button type="submit" class="button btn-done">完了</button>
+                                </form>
+
                             </div>
-                            <form action="complete_task.php" method="post">
-                                <input type="hidden" name="id" value="<?php echo (int)$task['id']; ?>">
-                                <button type="submit" class="button btn-done">完了</button>
-                            </form>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                </section>
 
-                        </div>
-                    <?php endforeach; ?>
-                <?php endif; ?>
-            </section>
+                <!-- Q4：やらない（重要でない×緊急でない） -->
+                <section class="quadrant q4">
+                    <h2>やらない（重要でない×緊急でない）</h2>
 
-            <!-- Q3：任せる（緊急×重要でない） -->
-            <section class="quadrant q3">
-                <h2>任せる（緊急×重要でない）</h2>
+                    <?php if (empty($tasks_q4)): ?>
+                        <p>タスクはありません</p>
+                    <?php else: ?>
+                        <?php foreach ($tasks_q4 as $task): ?>
+                            <?php
+                            $isOverdue = !empty($task['due_date']) && $task['due_date'] < $today;
+                            ?>
+                            <!-- JSが読み取るためのデータ -->
+                            <div class="card<?php echo $isOverdue ? ' expired' : ''; ?>"
+                                data-id="<?php echo (int)$task['id']; ?>"
+                                data-title="<?php echo htmlspecialchars($task['title'] ?? '', ENT_QUOTES, 'UTF-8'); ?>"
+                                data-memo="<?php echo htmlspecialchars($task['memo'] ?? '', ENT_QUOTES, 'UTF-8'); ?>"
+                                data-due="<?php echo htmlspecialchars($task['due_date'] ?? '', ENT_QUOTES, 'UTF-8'); ?>"
+                                data-imp="<?php echo (int)$task['is_important']; ?>"
+                                data-urg="<?php echo (int)$task['is_urgent']; ?>">
+                                <!-- ここは「表示専用」 -->
+                                <div class="due">
+                                    期日:
+                                    <?php echo htmlspecialchars($task['due_date'], ENT_QUOTES, 'UTF-8'); ?>
+                                </div>
+                                <div class="title">
+                                    <?php echo htmlspecialchars($task['title'], ENT_QUOTES, 'UTF-8'); ?>
+                                </div>
+                                <div class="memo">
+                                    <?php echo htmlspecialchars($task['memo'] ?? '', ENT_QUOTES, 'UTF-8'); ?>
+                                </div>
+                                <form action="complete_task.php" method="post">
+                                    <input type="hidden" name="id" value="<?php echo (int)$task['id']; ?>">
+                                    <button type="submit" class="button btn-done">完了</button>
+                                </form>
 
-                <?php if (empty($tasks_q3)): ?>
-                    <p>タスクはありません</p>
-                <?php else: ?>
-                    <?php foreach ($tasks_q3 as $task): ?>
-                        <?php
-                        $isOverdue = !empty($task['due_date']) && $task['due_date'] < $today;
-                        ?>
-                        <!-- JSが読み取るためのデータ -->
-                        <div class="card<?php echo $isOverdue ? ' expired' : ''; ?>"
-                            data-id="<?php echo (int)$task['id']; ?>"
-                            data-title="<?php echo htmlspecialchars($task['title'] ?? '', ENT_QUOTES, 'UTF-8'); ?>"
-                            data-memo="<?php echo htmlspecialchars($task['memo'] ?? '', ENT_QUOTES, 'UTF-8'); ?>"
-                            data-due="<?php echo htmlspecialchars($task['due_date'] ?? '', ENT_QUOTES, 'UTF-8'); ?>"
-                            data-imp="<?php echo (int)$task['is_important']; ?>"
-                            data-urg="<?php echo (int)$task['is_urgent']; ?>">
-                            <!-- ここは「表示専用」 -->
-                            <div class="due">
-                                期日:
-                                <?php echo htmlspecialchars($task['due_date'], ENT_QUOTES, 'UTF-8'); ?>
                             </div>
-                            <div class="title">
-                                <?php echo htmlspecialchars($task['title'], ENT_QUOTES, 'UTF-8'); ?>
-                            </div>
-                            <div class="memo">
-                                <?php echo htmlspecialchars($task['memo'] ?? '', ENT_QUOTES, 'UTF-8'); ?>
-                            </div>
-                            <form action="complete_task.php" method="post">
-                                <input type="hidden" name="id" value="<?php echo (int)$task['id']; ?>">
-                                <button type="submit" class="button btn-done">完了</button>
-                            </form>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                </section>
 
-                        </div>
-                    <?php endforeach; ?>
-                <?php endif; ?>
-            </section>
+                <!-- Q2, Q3, Q4 も同じ構造で、使う配列だけ変える -->
+            </div>
 
-            <!-- Q4：やらない（重要でない×緊急でない） -->
-            <section class="quadrant q4">
-                <h2>やらない（重要でない×緊急でない）</h2>
-
-                <?php if (empty($tasks_q4)): ?>
-                    <p>タスクはありません</p>
-                <?php else: ?>
-                    <?php foreach ($tasks_q4 as $task): ?>
-                        <?php
-                        $isOverdue = !empty($task['due_date']) && $task['due_date'] < $today;
-                        ?>
-                        <!-- JSが読み取るためのデータ -->
-                        <div class="card<?php echo $isOverdue ? ' expired' : ''; ?>"
-                            data-id="<?php echo (int)$task['id']; ?>"
-                            data-title="<?php echo htmlspecialchars($task['title'] ?? '', ENT_QUOTES, 'UTF-8'); ?>"
-                            data-memo="<?php echo htmlspecialchars($task['memo'] ?? '', ENT_QUOTES, 'UTF-8'); ?>"
-                            data-due="<?php echo htmlspecialchars($task['due_date'] ?? '', ENT_QUOTES, 'UTF-8'); ?>"
-                            data-imp="<?php echo (int)$task['is_important']; ?>"
-                            data-urg="<?php echo (int)$task['is_urgent']; ?>">
-                            <!-- ここは「表示専用」 -->
-                            <div class="due">
-                                期日:
-                                <?php echo htmlspecialchars($task['due_date'], ENT_QUOTES, 'UTF-8'); ?>
-                            </div>
-                            <div class="title">
-                                <?php echo htmlspecialchars($task['title'], ENT_QUOTES, 'UTF-8'); ?>
-                            </div>
-                            <div class="memo">
-                                <?php echo htmlspecialchars($task['memo'] ?? '', ENT_QUOTES, 'UTF-8'); ?>
-                            </div>
-                            <form action="complete_task.php" method="post">
-                                <input type="hidden" name="id" value="<?php echo (int)$task['id']; ?>">
-                                <button type="submit" class="button btn-done">完了</button>
-                            </form>
-
-                        </div>
-                    <?php endforeach; ?>
-                <?php endif; ?>
-            </section>
-
-            <!-- Q2, Q3, Q4 も同じ構造で、使う配列だけ変える -->
-        </div>
-
-        <!-- <div class="quadrant q1">
+            <!-- <div class="quadrant q1">
                 <h2>すぐやる（重要×緊急）</h2>
                 <div class="card expired">
                     <div class="due">期日: 11/20</div>バグ修正対応<div class="button">完了</div>
@@ -619,7 +623,7 @@ $tasks_q4 = fetchTasksByQuadrant($pdo, $today, 0, 0); // 重要でない×緊急
                     <div class="due">期日: 11/25</div>会議資料作成<div class="button">完了</div>
                 </div>
             </div> -->
-        <!-- <div class="quadrant q2">
+            <!-- <div class="quadrant q2">
             <h2>計画してやる（重要×緊急でない）</h2>
             <div class="card">
                 <div class="due">期日: 11/30</div>新機能設計メモ<div class="button">完了</div>
@@ -637,106 +641,106 @@ $tasks_q4 = fetchTasksByQuadrant($pdo, $today, 0, 0); // 重要でない×緊急
                 <div class="due">期日: -</div>古いファイル整理<div class="button">完了</div>
             </div>
         </div> -->
-    </div>
+        </div>
 
-    <!-- =========================
+        <!-- =========================
  編集用モーダル（最初は非表示）
 ========================= -->
-    <div id="editModal" class="modal-overlay" aria-hidden="true">
+        <div id="editModal" class="modal-overlay" aria-hidden="true">
 
-        <div class="modal">
+            <div class="modal">
 
-            <!-- タイトル＋閉じる -->
-            <div class="modal-header">
-                <h3>タスクを編集</h3>
-                <button type="button" id="modalClose">×</button>
+                <!-- タイトル＋閉じる -->
+                <div class="modal-header">
+                    <h3>タスクを編集</h3>
+                    <button type="button" id="modalClose">×</button>
+                </div>
+
+                <!-- 更新用フォーム -->
+                <form action="update_task.php" method="post">
+
+                    <!-- どのタスクかを識別するID -->
+                    <input type="hidden" name="id" id="edit_id">
+
+                    <label>タスク名</label>
+                    <input type="text" name="title" id="edit_title">
+
+                    <label>メモ（全文）</label>
+                    <textarea name="memo" id="edit_memo"></textarea>
+
+                    <label>重要度</label>
+                    <input type="radio" name="is_important" value="1" id="edit_imp_1">重要
+                    <input type="radio" name="is_important" value="0" id="edit_imp_0">重要でない
+
+                    <label>緊急度</label>
+                    <input type="radio" name="is_urgent" value="1" id="edit_urg_1">緊急
+                    <input type="radio" name="is_urgent" value="0" id="edit_urg_0">緊急でない
+
+                    <label>期日</label>
+                    <input type="date" name="due_date" id="edit_due">
+
+                    <button type="submit">更新</button>
+                </form>
             </div>
-
-            <!-- 更新用フォーム -->
-            <form action="update_task.php" method="post">
-
-                <!-- どのタスクかを識別するID -->
-                <input type="hidden" name="id" id="edit_id">
-
-                <label>タスク名</label>
-                <input type="text" name="title" id="edit_title">
-
-                <label>メモ（全文）</label>
-                <textarea name="memo" id="edit_memo"></textarea>
-
-                <label>重要度</label>
-                <input type="radio" name="is_important" value="1" id="edit_imp_1">重要
-                <input type="radio" name="is_important" value="0" id="edit_imp_0">重要でない
-
-                <label>緊急度</label>
-                <input type="radio" name="is_urgent" value="1" id="edit_urg_1">緊急
-                <input type="radio" name="is_urgent" value="0" id="edit_urg_0">緊急でない
-
-                <label>期日</label>
-                <input type="date" name="due_date" id="edit_due">
-
-                <button type="submit">更新</button>
-            </form>
         </div>
-    </div>
 
-    <script>
-        // ==============================
-        // モーダルとフォーム部品を取得
-        // ==============================
-        const modal = document.getElementById('editModal');
-        const closeBtn = document.getElementById('modalClose');
+        <script>
+            // ==============================
+            // モーダルとフォーム部品を取得
+            // ==============================
+            const modal = document.getElementById('editModal');
+            const closeBtn = document.getElementById('modalClose');
 
-        const editId = document.getElementById('edit_id');
-        const editTitle = document.getElementById('edit_title');
-        const editMemo = document.getElementById('edit_memo');
-        const editDue = document.getElementById('edit_due');
+            const editId = document.getElementById('edit_id');
+            const editTitle = document.getElementById('edit_title');
+            const editMemo = document.getElementById('edit_memo');
+            const editDue = document.getElementById('edit_due');
 
-        const imp1 = document.getElementById('edit_imp_1');
-        const imp0 = document.getElementById('edit_imp_0');
-        const urg1 = document.getElementById('edit_urg_1');
-        const urg0 = document.getElementById('edit_urg_0');
+            const imp1 = document.getElementById('edit_imp_1');
+            const imp0 = document.getElementById('edit_imp_0');
+            const urg1 = document.getElementById('edit_urg_1');
+            const urg0 = document.getElementById('edit_urg_0');
 
-        // ==============================
-        // モーダルを開く／閉じる
-        // ==============================
-        function openModal() {
-            modal.classList.add('is-open');
-        }
+            // ==============================
+            // モーダルを開く／閉じる
+            // ==============================
+            function openModal() {
+                modal.classList.add('is-open');
+            }
 
-        function closeModal() {
-            modal.classList.remove('is-open');
-        }
+            function closeModal() {
+                modal.classList.remove('is-open');
+            }
 
-        closeBtn.addEventListener('click', closeModal);
+            closeBtn.addEventListener('click', closeModal);
 
-        // ==============================
-        // 各タスクカードにクリックイベントを付ける
-        // ==============================
-        document.querySelectorAll('.card').forEach(card => {
+            // ==============================
+            // 各タスクカードにクリックイベントを付ける
+            // ==============================
+            document.querySelectorAll('.card').forEach(card => {
 
-            card.addEventListener('click', (e) => {
+                card.addEventListener('click', (e) => {
 
-                // 完了ボタンを押した時は編集しない
-                if (e.target.closest('form')) return;
+                    // 完了ボタンを押した時は編集しない
+                    if (e.target.closest('form')) return;
 
-                // --------------------------
-                // card の data-* を取得
-                // --------------------------
-                editId.value = card.dataset.id;
-                editTitle.value = card.dataset.title;
-                editMemo.value = card.dataset.memo;
-                editDue.value = card.dataset.due;
+                    // --------------------------
+                    // card の data-* を取得
+                    // --------------------------
+                    editId.value = card.dataset.id;
+                    editTitle.value = card.dataset.title;
+                    editMemo.value = card.dataset.memo;
+                    editDue.value = card.dataset.due;
 
-                // ラジオボタンの切り替え
-                (card.dataset.imp === '1' ? imp1 : imp0).checked = true;
-                (card.dataset.urg === '1' ? urg1 : urg0).checked = true;
+                    // ラジオボタンの切り替え
+                    (card.dataset.imp === '1' ? imp1 : imp0).checked = true;
+                    (card.dataset.urg === '1' ? urg1 : urg0).checked = true;
 
-                // モーダルを開く
-                openModal();
+                    // モーダルを開く
+                    openModal();
+                });
             });
-        });
-    </script>
+        </script>
 
 
 </body>
