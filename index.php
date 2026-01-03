@@ -421,6 +421,89 @@ $tasks_q4 = fetchTasksByQuadrant($pdo, $today, 0, 0); // 重要でない×緊急
                 display: block;
             }
         }
+
+        /* =========================
+   タスクカード（.card）見た目調整
+   ========================= */
+
+        /* クリックできるカード感 */
+        .card {
+            cursor: pointer;
+            /* “押せる”感 */
+            border: 1px solid rgba(0, 0, 0, 0.06);
+            transition: transform 120ms ease, box-shadow 120ms ease, border-color 120ms ease;
+        }
+
+        /* hover（PC向け） */
+        .card:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.10);
+            border-color: rgba(0, 0, 0, 0.12);
+        }
+
+        /* キーボード操作でも見えるように（将来のための保険） */
+        .card:focus-within {
+            box-shadow: 0 0 0 3px rgba(46, 139, 87, 0.18);
+            border-color: rgba(46, 139, 87, 0.45);
+        }
+
+        /* 期日：少し小さく、目立ちすぎない */
+        .card .due {
+            font-size: 12.5px;
+            opacity: 0.9;
+            margin-bottom: 2px;
+        }
+
+        /* タイトル：少し強調 */
+        .card .title {
+            font-weight: 700;
+            margin-bottom: 2px;
+
+            /* 長いタイトルが崩れないように（念のため） */
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        /* メモ：1行省略（すでにあるが “見た目” を整える） */
+        .card .memo {
+            opacity: 0.85;
+        }
+
+        /* -----------------------------
+   高さを揃える（ここが本題）
+   ----------------------------- */
+
+        /*
+  今の card は padding: 8px 10px 40px; で
+  下にボタン分の余白を確保しています。
+  「高さを揃える」ために min-height を入れます。
+
+  ※数字は“まずの目安”です。タスク量を見ながら調整します。
+*/
+        .card {
+            min-height: 112px;
+            /* 高さを揃える核：まずこれで */
+            padding-bottom: 44px;
+            /* 右下ボタンのための確保（既存と同等） */
+        }
+
+        /* ボタンとカードクリックの干渉を減らす（押しやすさ） */
+        .card .btn-done {
+            cursor: pointer;
+            /* ボタンはボタンで押せる感 */
+        }
+
+        /* 完了ボタンの中のフォームがカード全体を覆わない保険 */
+        .card form {
+            margin: 0;
+        }
+
+        /* 期限切れ表示（既存の .expired .due を活かしつつ、カード全体も少しだけ差別化したい場合）
+   ※強すぎると見づらいので薄く */
+        .card.expired {
+            border-color: rgba(192, 0, 0, 0.20);
+        }
     </style>
 </head>
 
