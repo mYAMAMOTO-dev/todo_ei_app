@@ -429,7 +429,7 @@ $tasks_q4 = fetchTasksByQuadrant($pdo, $today, 0, 0); // 重要でない×緊急
     <div class="wrapper">
 
         <!-- 登録フォーム アコーディオン化-->
-        <div class="task-accordion">
+        <div class="task-accordion<?php echo !empty($form_errors) ? ' is-open' : ''; ?>">
             <button type="button" class="task-accordion__header">
                 <span>タスク登録</span>
                 <span class="task-accordion__icon">＋</span>
