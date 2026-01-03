@@ -801,6 +801,46 @@ $tasks_q4 = fetchTasksByQuadrant($pdo, $today, 0, 0); // 重要でない×緊急
             });
         </script>
 
+        <script>
+            // ==============================
+            // タスク登録アコーディオン（スマホ用）
+            // ==============================
+
+            // 外枠（is-open を付ける場所）
+            const acc = document.querySelector('.task-accordion');
+
+            // ヘッダー（押すボタン）
+            const accBtn = document.querySelector('.task-accordion__header');
+
+            // 記号（＋/−）
+            const accIcon = document.querySelector('.task-accordion__icon');
+
+            // 要素が存在する時だけ動かす（安全策）
+            if (acc && accBtn && accIcon) {
+
+                // 初期状態：閉じている想定（＋）
+                // ※ エラー時にPHPで is-open を付けたら、ここで記号も合わせる
+                if (acc.classList.contains('is-open')) {
+                    accIcon.textContent = '−';
+                } else {
+                    accIcon.textContent = '＋';
+                }
+
+                // クリックで開閉
+                accBtn.addEventListener('click', () => {
+
+                    // is-open を反転
+                    acc.classList.toggle('is-open');
+
+                    // 記号も状態に合わせて切り替え
+                    if (acc.classList.contains('is-open')) {
+                        accIcon.textContent = '−';
+                    } else {
+                        accIcon.textContent = '＋';
+                    }
+                });
+            }
+        </script>
 
 </body>
 
