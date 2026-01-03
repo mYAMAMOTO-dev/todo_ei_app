@@ -504,6 +504,41 @@ $tasks_q4 = fetchTasksByQuadrant($pdo, $today, 0, 0); // 重要でない×緊急
         .card.expired {
             border-color: rgba(192, 0, 0, 0.20);
         }
+
+        /* =========================
+   サブボタン（完了済みリンク用）
+   ========================= */
+
+        .completed-link-wrap {
+            max-width: 900px;
+            margin: 0 auto 14px;
+            text-align: left;
+        }
+
+        .btn-sub {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 999px;
+
+            border: 1px solid rgba(0, 0, 0, 0.22);
+            background: rgba(255, 255, 255, 0.85);
+            color: #333;
+
+            font-size: 13px;
+            text-decoration: none;
+        }
+
+        /* 押せる感（PC向け） */
+        .btn-sub:hover {
+            background: #fff;
+            border-color: rgba(0, 0, 0, 0.35);
+        }
+
+        /* キーボードでも分かる */
+        .btn-sub:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.10);
+        }
     </style>
 </head>
 
@@ -585,7 +620,10 @@ $tasks_q4 = fetchTasksByQuadrant($pdo, $today, 0, 0); // 重要でない×緊急
                 </form>
             </div>
 
-            <p><a href="completed.php">完了済みタスクを見る</a></p>
+            <p class="completed-link-wrap">
+                <a href="completed.php" class="btn-sub">完了済みタスクを見る</a>
+            </p>
+
             <div class="matrix">
 
                 <!-- Q1：すぐやる（重要×緊急） -->
