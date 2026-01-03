@@ -200,18 +200,35 @@ $tasks_q4 = fetchTasksByQuadrant($pdo, $today, 0, 0); // 重要でない×緊急
             font-size: 16px;
         }
 
-        /* 中のタスクカード */
+        /* =========================
+   タスクカード（.card）
+   ========================= */
 
-        /* カード本体 */
+        /* ---------- 全カード共通（構造・ベース） ---------- */
+        /* カードという「箱」そのものの定義 */
         .card {
             position: relative;
+            /* 完了ボタンを右下に固定するため */
             background: #fff;
             border-radius: 8px;
-            padding: 8px 10px 40px;
+            /* カード内の余白（下は完了ボタン分を含む） */
+            padding: 8px 10px 44px;
             margin-top: 8px;
             text-align: left;
+
+            /* クリックできるカード感 */
+            cursor: pointer;
+            /* “押せる”感 */
+            border: 1px solid rgba(0, 0, 0, 0.06);
+            transition: transform 120ms ease,
+                box-shadow 120ms ease,
+                border-color 120ms ease;
+
+            /* カードの高さを揃える（一覧の安定感） */
+            min-height: 112px;
         }
 
+        /* ---------- カード内の特定パーツ共通（文字系） ---------- */
         /* 期日・タイトル・メモの共通スタイル */
         .card .due,
         .card .title,
@@ -220,7 +237,8 @@ $tasks_q4 = fetchTasksByQuadrant($pdo, $today, 0, 0); // 重要でない×緊急
             line-height: 1.4;
         }
 
-        /* メモ1行省略 */
+        /* ---------- カード内の特定パーツ共通（メモ） ---------- */
+        /* 一覧では1行省略表示 */
         .card .memo {
             white-space: nowrap;
             overflow: hidden;
@@ -229,7 +247,8 @@ $tasks_q4 = fetchTasksByQuadrant($pdo, $today, 0, 0); // 重要でない×緊急
             margin-top: 2px;
         }
 
-        /* 完了ボタン（右下固定） */
+        /* ---------- カード内の特定パーツ共通（完了ボタン） ---------- */
+        /* カード右下に固定される完了ボタン */
         .card .button,
         .card .btn-done {
             position: absolute;
@@ -244,7 +263,59 @@ $tasks_q4 = fetchTasksByQuadrant($pdo, $today, 0, 0); // 重要でない×緊急
             color: #fff;
             font-size: 13px;
             cursor: pointer;
+            /* ボタンとしての操作感 */
         }
+
+        /* ---------- カード内の特定パーツ（差分） ---------- */
+        /* 期日：少し小さく、目立ちすぎない */
+        .card .due {
+            font-size: 12.5px;
+            opacity: 0.9;
+            margin-bottom: 2px;
+        }
+
+        /* タイトル：少し強調 */
+        .card .title {
+            font-weight: 700;
+            margin-bottom: 2px;
+
+            /* 長いタイトルが崩れないように（念のため） */
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        /* メモ：1行省略（すでにあるが “見た目” を整える） */
+        .card .memo {
+            opacity: 0.85;
+        }
+
+        /* ---------- 状態で変わる（インタラクション） ---------- */
+        /* hover（PC向け） */
+        .card:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.10);
+            border-color: rgba(0, 0, 0, 0.12);
+        }
+
+        /* キーボード操作でも見えるように（将来のための保険） */
+        .card:focus-within {
+            box-shadow: 0 0 0 3px rgba(46, 139, 87, 0.18);
+            border-color: rgba(46, 139, 87, 0.45);
+        }
+
+        /* ---------- 状態で変わる（期限切れ） ---------- */
+        /* 期限切れタスクのカード表現 */
+        .card.expired {
+            border-color: rgba(192, 0, 0, 0.20);
+        }
+
+        /* ---------- カード内の構造補助 ---------- */
+        /* 完了ボタンの中のフォームがカード全体を覆わない保険 */
+        .card form {
+            margin: 0;
+        }
+
 
 
 
@@ -400,88 +471,6 @@ $tasks_q4 = fetchTasksByQuadrant($pdo, $today, 0, 0); // 重要でない×緊急
             }
         }
 
-        /* =========================
-   タスクカード（.card）見た目調整
-   ========================= */
-
-        /* クリックできるカード感 */
-        .card {
-            cursor: pointer;
-            /* “押せる”感 */
-            border: 1px solid rgba(0, 0, 0, 0.06);
-            transition: transform 120ms ease, box-shadow 120ms ease, border-color 120ms ease;
-        }
-
-        /* hover（PC向け） */
-        .card:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.10);
-            border-color: rgba(0, 0, 0, 0.12);
-        }
-
-        /* キーボード操作でも見えるように（将来のための保険） */
-        .card:focus-within {
-            box-shadow: 0 0 0 3px rgba(46, 139, 87, 0.18);
-            border-color: rgba(46, 139, 87, 0.45);
-        }
-
-        /* 期日：少し小さく、目立ちすぎない */
-        .card .due {
-            font-size: 12.5px;
-            opacity: 0.9;
-            margin-bottom: 2px;
-        }
-
-        /* タイトル：少し強調 */
-        .card .title {
-            font-weight: 700;
-            margin-bottom: 2px;
-
-            /* 長いタイトルが崩れないように（念のため） */
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-
-        /* メモ：1行省略（すでにあるが “見た目” を整える） */
-        .card .memo {
-            opacity: 0.85;
-        }
-
-        /* -----------------------------
-   高さを揃える（ここが本題）
-   ----------------------------- */
-
-        /*
-  今の card は padding: 8px 10px 40px; で
-  下にボタン分の余白を確保しています。
-  「高さを揃える」ために min-height を入れます。
-
-  ※数字は“まずの目安”です。タスク量を見ながら調整します。
-*/
-        .card {
-            min-height: 112px;
-            /* 高さを揃える核：まずこれで */
-            padding-bottom: 44px;
-            /* 右下ボタンのための確保（既存と同等） */
-        }
-
-        /* ボタンとカードクリックの干渉を減らす（押しやすさ） */
-        .card .btn-done {
-            cursor: pointer;
-            /* ボタンはボタンで押せる感 */
-        }
-
-        /* 完了ボタンの中のフォームがカード全体を覆わない保険 */
-        .card form {
-            margin: 0;
-        }
-
-        /* 期限切れ表示（既存の .expired .due を活かしつつ、カード全体も少しだけ差別化したい場合）
-   ※強すぎると見づらいので薄く */
-        .card.expired {
-            border-color: rgba(192, 0, 0, 0.20);
-        }
 
         /* =========================
    サブボタン（完了済みリンク用）
@@ -521,7 +510,11 @@ $tasks_q4 = fetchTasksByQuadrant($pdo, $today, 0, 0); // 重要でない×緊急
 
 
 
-
+        /* ボタンとカードクリックの干渉を減らす（押しやすさ）
+        .card .btn-done {
+            cursor: pointer;
+        } */
+        /* ボタンはボタンで押せる感 */
 
 
         /* body {
