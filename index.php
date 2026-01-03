@@ -122,15 +122,6 @@ $tasks_q4 = fetchTasksByQuadrant($pdo, $today, 0, 0); // 重要でない×緊急
             color: #004400;
         }
 
-        .button {
-            display: inline-block;
-            background-color: #2E8B57;
-            color: white;
-            padding: 6px 12px;
-            border-radius: 6px;
-            margin-top: 10px;
-        }
-
         .expired .due {
             color: red;
             opacity: 0.9;
@@ -539,6 +530,29 @@ $tasks_q4 = fetchTasksByQuadrant($pdo, $today, 0, 0); // 重要でない×緊急
             outline: none;
             box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.10);
         }
+
+
+
+
+
+
+
+
+
+
+
+
+
+        /*
+        削除候補
+        .button {
+            display: inline-block;
+            background-color: #2E8B57;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 6px;
+            margin-top: 10px;
+        } */
     </style>
 </head>
 
