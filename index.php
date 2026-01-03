@@ -362,6 +362,65 @@ $tasks_q4 = fetchTasksByQuadrant($pdo, $today, 0, 0); // 重要でない×緊急
             font-size: 22px;
             cursor: pointer;
         }
+
+        /* =========================
+   タスク登録アコーディオン
+   ========================= */
+
+        /* 外枠（見た目はお好みで調整OK） */
+        .task-accordion {
+            max-width: 900px;
+            margin: 0 auto 12px;
+        }
+
+        /* ヘッダー（スマホでだけ表示する） */
+        .task-accordion__header {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            /* まず中央寄せ（後で左右配置にもできる） */
+            gap: 8px;
+
+            padding: 8px 12px;
+            border-radius: 6px;
+
+            border: 1px solid #2E8B57;
+            background: #fff;
+            color: #2E8B57;
+
+            cursor: pointer;
+        }
+
+        /* + / - の見た目 */
+        .task-accordion__icon {
+            font-weight: 700;
+        }
+
+        /* ------- スマホ：初期は閉じる ------- */
+        /* bodyはデフォルト非表示 */
+        .task-accordion__body {
+            display: none;
+        }
+
+        /* 開いている時だけ表示 */
+        .task-accordion.is-open .task-accordion__body {
+            display: block;
+        }
+
+        /* ------- PC/タブレット：折りたたみOFF ------- */
+        @media (min-width: 768px) {
+
+            /* ヘッダーは表示しない（記号が謎にならない） */
+            .task-accordion__header {
+                display: none;
+            }
+
+            /* フォームは常に表示（is-open有無に関係なく） */
+            .task-accordion__body {
+                display: block;
+            }
+        }
     </style>
 </head>
 
