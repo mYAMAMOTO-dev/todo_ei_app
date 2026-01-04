@@ -682,316 +682,151 @@ function renderQuadrant(string $key, array $q, string $today): void
 
             <!-- 4象限 -->
             <div class="matrix">
-
-                <!-- Q1：すぐやる（重要×緊急） -->
-                <section class="quadrant q1">
-                    <h2>すぐやる（重要 × 緊急）</h2>
-
-                    <?php if (empty($tasks_q1)): ?>
-                        <p>タスクはありません</p>
-                    <?php else: ?>
-                        <?php foreach ($tasks_q1 as $task): ?>
-                            <?php
-                            $isOverdue = !empty($task['due_date']) && $task['due_date'] < $today;
-                            ?>
-                            <!-- JSが読み取るためのデータ -->
-                            <div class="card<?php echo $isOverdue ? ' expired' : ''; ?>"
-                                data-id="<?php echo (int)$task['id']; ?>"
-                                data-title="<?php echo htmlspecialchars($task['title'] ?? '', ENT_QUOTES, 'UTF-8'); ?>"
-                                data-memo="<?php echo htmlspecialchars($task['memo'] ?? '', ENT_QUOTES, 'UTF-8'); ?>"
-                                data-due="<?php echo htmlspecialchars($task['due_date'] ?? '', ENT_QUOTES, 'UTF-8'); ?>"
-                                data-imp="<?php echo (int)$task['is_important']; ?>"
-                                data-urg="<?php echo (int)$task['is_urgent']; ?>">
-
-                                <!-- ここは「表示専用」 -->
-                                <div class="due">
-                                    期日:
-                                    <?php echo htmlspecialchars($task['due_date'], ENT_QUOTES, 'UTF-8'); ?>
-                                </div>
-                                <div class="title">
-                                    <?php echo htmlspecialchars($task['title'], ENT_QUOTES, 'UTF-8'); ?>
-                                </div>
-                                <!-- 一覧では1行省略表示 -->
-                                <div class="memo">
-                                    <?php echo htmlspecialchars($task['memo'] ?? '', ENT_QUOTES, 'UTF-8'); ?>
-                                </div>
-                                <!-- 完了ボタンを “form POST” に -->
-                                <form action="complete_task.php" method="post">
-                                    <input type="hidden" name="id" value="<?php echo (int)$task['id']; ?>">
-                                    <button type="submit" class="button btn-done"
-                                        onclick="return confirm('完了にしますか？')">完了</button>
-                                </form>
-                            </div>
-                        <?php endforeach; ?>
-                    <?php endif; ?>
-                </section>
-
-                <!-- Q２：計画してやる（重要×緊急でない） -->
-                <section class="quadrant q2">
-                    <h2>計画してやる（重要×緊急でない）</h2>
-
-                    <?php if (empty($tasks_q2)): ?>
-                        <p>タスクはありません</p>
-                    <?php else: ?>
-                        <?php foreach ($tasks_q2 as $task): ?>
-                            <?php
-                            $isOverdue = !empty($task['due_date']) && $task['due_date'] < $today;
-                            ?>
-                            <!-- JSが読み取るためのデータ -->
-                            <div class="card<?php echo $isOverdue ? ' expired' : ''; ?>"
-                                data-id="<?php echo (int)$task['id']; ?>"
-                                data-title="<?php echo htmlspecialchars($task['title'] ?? '', ENT_QUOTES, 'UTF-8'); ?>"
-                                data-memo="<?php echo htmlspecialchars($task['memo'] ?? '', ENT_QUOTES, 'UTF-8'); ?>"
-                                data-due="<?php echo htmlspecialchars($task['due_date'] ?? '', ENT_QUOTES, 'UTF-8'); ?>"
-                                data-imp="<?php echo (int)$task['is_important']; ?>"
-                                data-urg="<?php echo (int)$task['is_urgent']; ?>">
-                                <!-- ここは「表示専用」 -->
-                                <div class="due">
-                                    期日:
-                                    <?php echo htmlspecialchars($task['due_date'], ENT_QUOTES, 'UTF-8'); ?>
-                                </div>
-                                <div class="title">
-                                    <?php echo htmlspecialchars($task['title'], ENT_QUOTES, 'UTF-8'); ?>
-                                </div>
-                                <div class="memo">
-                                    <?php echo htmlspecialchars($task['memo'] ?? '', ENT_QUOTES, 'UTF-8'); ?>
-                                </div>
-                                <form action="complete_task.php" method="post">
-                                    <input type="hidden" name="id" value="<?php echo (int)$task['id']; ?>">
-                                    <button type="submit" class="button btn-done"
-                                        onclick="return confirm('完了にしますか？')">完了</button>
-                                </form>
-
-                            </div>
-                        <?php endforeach; ?>
-                    <?php endif; ?>
-                </section>
-
-                <!-- Q3：任せる（緊急×重要でない） -->
-                <section class="quadrant q3">
-                    <h2>任せる（緊急×重要でない）</h2>
-
-                    <?php if (empty($tasks_q3)): ?>
-                        <p>タスクはありません</p>
-                    <?php else: ?>
-                        <?php foreach ($tasks_q3 as $task): ?>
-                            <?php
-                            $isOverdue = !empty($task['due_date']) && $task['due_date'] < $today;
-                            ?>
-                            <!-- JSが読み取るためのデータ -->
-                            <div class="card<?php echo $isOverdue ? ' expired' : ''; ?>"
-                                data-id="<?php echo (int)$task['id']; ?>"
-                                data-title="<?php echo htmlspecialchars($task['title'] ?? '', ENT_QUOTES, 'UTF-8'); ?>"
-                                data-memo="<?php echo htmlspecialchars($task['memo'] ?? '', ENT_QUOTES, 'UTF-8'); ?>"
-                                data-due="<?php echo htmlspecialchars($task['due_date'] ?? '', ENT_QUOTES, 'UTF-8'); ?>"
-                                data-imp="<?php echo (int)$task['is_important']; ?>"
-                                data-urg="<?php echo (int)$task['is_urgent']; ?>">
-                                <!-- ここは「表示専用」 -->
-                                <div class="due">
-                                    期日:
-                                    <?php echo htmlspecialchars($task['due_date'], ENT_QUOTES, 'UTF-8'); ?>
-                                </div>
-                                <div class="title">
-                                    <?php echo htmlspecialchars($task['title'], ENT_QUOTES, 'UTF-8'); ?>
-                                </div>
-                                <div class="memo">
-                                    <?php echo htmlspecialchars($task['memo'] ?? '', ENT_QUOTES, 'UTF-8'); ?>
-                                </div>
-                                <form action="complete_task.php" method="post">
-                                    <input type="hidden" name="id" value="<?php echo (int)$task['id']; ?>">
-                                    <button type="submit" class="button btn-done"
-                                        onclick="return confirm('完了にしますか？')">完了</button>
-                                </form>
-
-                            </div>
-                        <?php endforeach; ?>
-                    <?php endif; ?>
-                </section>
-
-                <!-- Q4：やらない（重要でない×緊急でない） -->
-                <section class="quadrant q4">
-                    <h2>やらない（重要でない×緊急でない）</h2>
-
-                    <?php if (empty($tasks_q4)): ?>
-                        <p>タスクはありません</p>
-                    <?php else: ?>
-                        <?php foreach ($tasks_q4 as $task): ?>
-                            <?php
-                            $isOverdue = !empty($task['due_date']) && $task['due_date'] < $today;
-                            ?>
-                            <!-- JSが読み取るためのデータ -->
-                            <div class="card<?php echo $isOverdue ? ' expired' : ''; ?>"
-                                data-id="<?php echo (int)$task['id']; ?>"
-                                data-title="<?php echo htmlspecialchars($task['title'] ?? '', ENT_QUOTES, 'UTF-8'); ?>"
-                                data-memo="<?php echo htmlspecialchars($task['memo'] ?? '', ENT_QUOTES, 'UTF-8'); ?>"
-                                data-due="<?php echo htmlspecialchars($task['due_date'] ?? '', ENT_QUOTES, 'UTF-8'); ?>"
-                                data-imp="<?php echo (int)$task['is_important']; ?>"
-                                data-urg="<?php echo (int)$task['is_urgent']; ?>">
-                                <!-- ここは「表示専用」 -->
-                                <div class="due">
-                                    期日:
-                                    <?php echo htmlspecialchars($task['due_date'], ENT_QUOTES, 'UTF-8'); ?>
-                                </div>
-                                <div class="title">
-                                    <?php echo htmlspecialchars($task['title'], ENT_QUOTES, 'UTF-8'); ?>
-                                </div>
-                                <div class="memo">
-                                    <?php echo htmlspecialchars($task['memo'] ?? '', ENT_QUOTES, 'UTF-8'); ?>
-                                </div>
-                                <form action="complete_task.php" method="post">
-                                    <input type="hidden" name="id" value="<?php echo (int)$task['id']; ?>">
-                                    <button type="submit" class="button btn-done"
-                                        onclick="return confirm('完了にしますか？')">完了</button>
-                                </form>
-
-                            </div>
-                        <?php endforeach; ?>
-                    <?php endif; ?>
-                </section>
-
-                <!-- Q2, Q3, Q4 も同じ構造で、使う配列だけ変える -->
+                <?php foreach ($quadrants as $key => $q): ?>
+                    <?php renderQuadrant($key, $q, $today); ?>
+                <?php endforeach; ?>
             </div>
         </div>
+    </div>
 
-        <!-- =========================
+    <!-- =========================
  編集用モーダル（最初は非表示）
 ========================= -->
-        <div id="editModal" class="modal-overlay" aria-hidden="true">
+    <div id="editModal" class="modal-overlay" aria-hidden="true">
 
-            <div class="modal">
+        <div class="modal">
 
-                <!-- タイトル＋閉じる -->
-                <div class="modal-header">
-                    <h3>タスクを編集</h3>
-                    <button type="button" id="modalClose">×</button>
-                </div>
-
-                <!-- 更新用フォーム -->
-                <form action="update_task.php" method="post">
-
-                    <!-- どのタスクかを識別するID -->
-                    <input type="hidden" name="id" id="edit_id">
-
-                    <label>タスク名</label>
-                    <input type="text" name="title" id="edit_title">
-
-                    <label>メモ（全文）</label>
-                    <textarea name="memo" id="edit_memo"></textarea>
-
-                    <label>重要度</label>
-                    <input type="radio" name="is_important" value="1" id="edit_imp_1">重要
-                    <input type="radio" name="is_important" value="0" id="edit_imp_0">重要でない
-
-                    <label>緊急度</label>
-                    <input type="radio" name="is_urgent" value="1" id="edit_urg_1">緊急
-                    <input type="radio" name="is_urgent" value="0" id="edit_urg_0">緊急でない
-
-                    <label>期日</label>
-                    <input type="date" name="due_date" id="edit_due">
-
-                    <button type="submit">更新</button>
-                </form>
+            <!-- タイトル＋閉じる -->
+            <div class="modal-header">
+                <h3>タスクを編集</h3>
+                <button type="button" id="modalClose">×</button>
             </div>
+
+            <!-- 更新用フォーム -->
+            <form action="update_task.php" method="post">
+
+                <!-- どのタスクかを識別するID -->
+                <input type="hidden" name="id" id="edit_id">
+
+                <label>タスク名</label>
+                <input type="text" name="title" id="edit_title">
+
+                <label>メモ（全文）</label>
+                <textarea name="memo" id="edit_memo"></textarea>
+
+                <label>重要度</label>
+                <input type="radio" name="is_important" value="1" id="edit_imp_1">重要
+                <input type="radio" name="is_important" value="0" id="edit_imp_0">重要でない
+
+                <label>緊急度</label>
+                <input type="radio" name="is_urgent" value="1" id="edit_urg_1">緊急
+                <input type="radio" name="is_urgent" value="0" id="edit_urg_0">緊急でない
+
+                <label>期日</label>
+                <input type="date" name="due_date" id="edit_due">
+
+                <button type="submit">更新</button>
+            </form>
         </div>
+    </div>
+    <script>
+        // ==============================
+        // モーダルとフォーム部品を取得
+        // ==============================
+        const modal = document.getElementById('editModal');
+        const closeBtn = document.getElementById('modalClose');
 
-        <script>
-            // ==============================
-            // モーダルとフォーム部品を取得
-            // ==============================
-            const modal = document.getElementById('editModal');
-            const closeBtn = document.getElementById('modalClose');
+        const editId = document.getElementById('edit_id');
+        const editTitle = document.getElementById('edit_title');
+        const editMemo = document.getElementById('edit_memo');
+        const editDue = document.getElementById('edit_due');
 
-            const editId = document.getElementById('edit_id');
-            const editTitle = document.getElementById('edit_title');
-            const editMemo = document.getElementById('edit_memo');
-            const editDue = document.getElementById('edit_due');
+        const imp1 = document.getElementById('edit_imp_1');
+        const imp0 = document.getElementById('edit_imp_0');
+        const urg1 = document.getElementById('edit_urg_1');
+        const urg0 = document.getElementById('edit_urg_0');
 
-            const imp1 = document.getElementById('edit_imp_1');
-            const imp0 = document.getElementById('edit_imp_0');
-            const urg1 = document.getElementById('edit_urg_1');
-            const urg0 = document.getElementById('edit_urg_0');
+        // ==============================
+        // モーダルを開く／閉じる
+        // ==============================
+        function openModal() {
+            modal.classList.add('is-open');
+        }
 
-            // ==============================
-            // モーダルを開く／閉じる
-            // ==============================
-            function openModal() {
-                modal.classList.add('is-open');
-            }
+        function closeModal() {
+            modal.classList.remove('is-open');
+        }
 
-            function closeModal() {
-                modal.classList.remove('is-open');
-            }
+        closeBtn.addEventListener('click', closeModal);
 
-            closeBtn.addEventListener('click', closeModal);
+        // ==============================
+        // 各タスクカードにクリックイベントを付ける
+        // ==============================
+        document.querySelectorAll('.card').forEach(card => {
 
-            // ==============================
-            // 各タスクカードにクリックイベントを付ける
-            // ==============================
-            document.querySelectorAll('.card').forEach(card => {
+            card.addEventListener('click', (e) => {
 
-                card.addEventListener('click', (e) => {
+                // 完了ボタンを押した時は編集しない
+                if (e.target.closest('form')) return;
 
-                    // 完了ボタンを押した時は編集しない
-                    if (e.target.closest('form')) return;
+                // --------------------------
+                // card の data-* を取得
+                // --------------------------
+                editId.value = card.dataset.id;
+                editTitle.value = card.dataset.title;
+                editMemo.value = card.dataset.memo;
+                editDue.value = card.dataset.due;
 
-                    // --------------------------
-                    // card の data-* を取得
-                    // --------------------------
-                    editId.value = card.dataset.id;
-                    editTitle.value = card.dataset.title;
-                    editMemo.value = card.dataset.memo;
-                    editDue.value = card.dataset.due;
+                // ラジオボタンの切り替え
+                (card.dataset.imp === '1' ? imp1 : imp0).checked = true;
+                (card.dataset.urg === '1' ? urg1 : urg0).checked = true;
 
-                    // ラジオボタンの切り替え
-                    (card.dataset.imp === '1' ? imp1 : imp0).checked = true;
-                    (card.dataset.urg === '1' ? urg1 : urg0).checked = true;
-
-                    // モーダルを開く
-                    openModal();
-                });
+                // モーダルを開く
+                openModal();
             });
-        </script>
+        });
+    </script>
 
-        <script>
-            // ==============================
-            // タスク登録アコーディオン（スマホ用）
-            // ==============================
+    <script>
+        // ==============================
+        // タスク登録アコーディオン（スマホ用）
+        // ==============================
 
-            // 外枠（is-open を付ける場所）
-            const acc = document.querySelector('.task-accordion');
+        // 外枠（is-open を付ける場所）
+        const acc = document.querySelector('.task-accordion');
 
-            // ヘッダー（押すボタン）
-            const accBtn = document.querySelector('.task-accordion__header');
+        // ヘッダー（押すボタン）
+        const accBtn = document.querySelector('.task-accordion__header');
 
-            // 記号（＋/−）
-            const accIcon = document.querySelector('.task-accordion__icon');
+        // 記号（＋/−）
+        const accIcon = document.querySelector('.task-accordion__icon');
 
-            // 要素が存在する時だけ動かす（安全策）
-            if (acc && accBtn && accIcon) {
+        // 要素が存在する時だけ動かす（安全策）
+        if (acc && accBtn && accIcon) {
 
-                // 初期状態：閉じている想定（＋）
-                // ※ エラー時にPHPで is-open を付けたら、ここで記号も合わせる
+            // 初期状態：閉じている想定（＋）
+            // ※ エラー時にPHPで is-open を付けたら、ここで記号も合わせる
+            if (acc.classList.contains('is-open')) {
+                accIcon.textContent = '−';
+            } else {
+                accIcon.textContent = '＋';
+            }
+
+            // クリックで開閉
+            accBtn.addEventListener('click', () => {
+
+                // is-open を反転
+                acc.classList.toggle('is-open');
+
+                // 記号も状態に合わせて切り替え
                 if (acc.classList.contains('is-open')) {
                     accIcon.textContent = '−';
                 } else {
                     accIcon.textContent = '＋';
                 }
-
-                // クリックで開閉
-                accBtn.addEventListener('click', () => {
-
-                    // is-open を反転
-                    acc.classList.toggle('is-open');
-
-                    // 記号も状態に合わせて切り替え
-                    if (acc.classList.contains('is-open')) {
-                        accIcon.textContent = '−';
-                    } else {
-                        accIcon.textContent = '＋';
-                    }
-                });
-            }
-        </script>
+            });
+        }
+    </script>
 
 </body>
 
