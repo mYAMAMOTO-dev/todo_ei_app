@@ -329,33 +329,7 @@ $tasks_q4 = fetchTasksByQuadrant($pdo, $today, 0, 0); // 重要でない×緊急
             font-size: 14px;
         }
 
-        /* ---------------------- */
-        /* タブレット以上：2列    */
-        /* ---------------------- */
-        @media (min-width: 768px) {
-            .wrapper {
-                padding: 24px;
-            }
 
-            .matrix {
-                grid-template-columns: repeat(2, minmax(0, 1fr));
-                /* 2×2 */
-                gap: 20px;
-                max-width: 900px;
-                margin: 0 auto;
-                /* だんだん中央寄せに寄っていく感じ */
-            }
-
-            .quadrant h2 {
-                font-size: 17px;
-            }
-
-            .card .due,
-            .card .title,
-            .card .memo {
-                font-size: 14px;
-            }
-        }
 
         /* =========================
    6.タスク登録アコーディオン
@@ -482,6 +456,29 @@ $tasks_q4 = fetchTasksByQuadrant($pdo, $today, 0, 0); // 重要でない×緊急
    9.メディアクエリ（768→1200）
    ========================= */
 
+        /* ---------------------- */
+        /* タブレット以上：2列    */
+        /* ---------------------- */
+        @media (min-width: 768px) {
+            .wrapper {
+                padding: 24px;
+            }
+
+            .matrix {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                /* 2×2 */
+                gap: 20px;
+                max-width: 900px;
+                margin: 0 auto;
+                /* だんだん中央寄せに寄っていく感じ */
+            }
+
+            .quadrant h2 {
+                font-size: 17px;
+            }
+
+        }
+
         /* ------- PC/タブレット：折りたたみOFF ------- */
         @media (min-width: 768px) {
 
@@ -515,11 +512,11 @@ $tasks_q4 = fetchTasksByQuadrant($pdo, $today, 0, 0); // 重要でない×緊急
                 font-size: 18px;
             }
 
-            .card .due,
+            /* .card .due,
             .card .title,
             .card .memo {
                 font-size: 15px;
-            }
+            } */
         }
     </style>
 </head>
