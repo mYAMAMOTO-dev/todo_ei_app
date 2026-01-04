@@ -88,6 +88,58 @@ $tasks_q4 = fetchTasksByQuadrant($pdo, $today, 0, 0); // 重要でない×緊急
     <meta charset="UTF-8">
     <title>アイゼンハワーマトリクス</title>
     <style>
+        /* =========================
+   1.リセット/共通
+   ========================= */
+        /* --------------- */
+        /* ベース：スマホ */
+        /* --------------- */
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+            text-align: center;
+            background-color: #f6f6f6;
+        }
+
+        /* =========================
+   2.レイアウト
+   ========================= */
+        .wrapper {
+            min-height: 100vh;
+            padding: 16px;
+        }
+
+        /* 4象限コンテナ：まずは1列 */
+        .matrix {
+            display: grid;
+            grid-template-columns: 1fr;
+            /* スマホは1列 */
+            gap: 16px;
+        }
+
+        /* =========================
+   3.象限
+   ========================= */
+        /* 象限カード（背景色は今のままでOK） */
+        .quadrant {
+            border-radius: 12px;
+            padding: 16px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+        }
+
+        /* 象限タイトル（常に表示） */
+        .quadrant h2 {
+            margin: 0 0 8px;
+            font-size: 16px;
+        }
+
         .q1 {
             background-color: #FFCCCC;
             color: #660000;
@@ -111,93 +163,6 @@ $tasks_q4 = fetchTasksByQuadrant($pdo, $today, 0, 0); // 重要でない×緊急
         .expired .due {
             color: red;
             opacity: 0.9;
-        }
-
-        .task-form {
-            max-width: 900px;
-            margin: 0 auto 24px;
-            padding: 16px 20px;
-            background: #ffffff;
-            border-radius: 12px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
-            text-align: left;
-        }
-
-        .form-row {
-            margin-bottom: 10px;
-        }
-
-        .required {
-            color: #C00000;
-            font-size: 12px;
-            margin-left: 4px;
-        }
-
-        .form-row input[type="text"],
-        .form-row input[type="date"],
-        .form-row textarea {
-            width: 100%;
-            padding: 6px 8px;
-            border-radius: 6px;
-            border: 1px solid #ccc;
-            font-size: 14px;
-        }
-
-        .form-row-submit {
-            text-align: right;
-        }
-
-        .form-row-submit button {
-            padding: 6px 16px;
-            border-radius: 999px;
-            border: none;
-            background: #2E8B57;
-            color: #fff;
-            cursor: pointer;
-            font-size: 14px;
-        }
-
-        /* --------------- */
-        /* ベース：スマホ */
-        /* --------------- */
-
-        *,
-        *::before,
-        *::after {
-            box-sizing: border-box;
-        }
-
-        body {
-            margin: 0;
-            font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-            text-align: center;
-            background-color: #f6f6f6;
-        }
-
-        .wrapper {
-            min-height: 100vh;
-            padding: 16px;
-        }
-
-        /* 4象限コンテナ：まずは1列 */
-        .matrix {
-            display: grid;
-            grid-template-columns: 1fr;
-            /* スマホは1列 */
-            gap: 16px;
-        }
-
-        /* 象限カード（背景色は今のままでOK） */
-        .quadrant {
-            border-radius: 12px;
-            padding: 16px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
-        }
-
-        /* 象限タイトル（常に表示） */
-        .quadrant h2 {
-            margin: 0 0 8px;
-            font-size: 16px;
         }
 
         /* =========================
@@ -316,8 +281,53 @@ $tasks_q4 = fetchTasksByQuadrant($pdo, $today, 0, 0); // 重要でない×緊急
             margin: 0;
         }
 
+        /* =========================
+   5.フォーム
+   ========================= */
 
+        .task-form {
+            max-width: 900px;
+            margin: 0 auto 24px;
+            padding: 16px 20px;
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+            text-align: left;
+        }
 
+        .form-row {
+            margin-bottom: 10px;
+        }
+
+        .required {
+            color: #C00000;
+            font-size: 12px;
+            margin-left: 4px;
+        }
+
+        .form-row input[type="text"],
+        .form-row input[type="date"],
+        .form-row textarea {
+            width: 100%;
+            padding: 6px 8px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            font-size: 14px;
+        }
+
+        .form-row-submit {
+            text-align: right;
+        }
+
+        .form-row-submit button {
+            padding: 6px 16px;
+            border-radius: 999px;
+            border: none;
+            background: #2E8B57;
+            color: #fff;
+            cursor: pointer;
+            font-size: 14px;
+        }
 
         /* ---------------------- */
         /* タブレット以上：2列    */
@@ -345,75 +355,10 @@ $tasks_q4 = fetchTasksByQuadrant($pdo, $today, 0, 0); // 重要でない×緊急
             .card .memo {
                 font-size: 14px;
             }
-
-        }
-
-        /* ---------------------- */
-        /* PC：幅を絞って中央寄せ */
-        /* ---------------------- */
-        @media (min-width: 1200px) {
-            .matrix {
-                max-width: 1000px;
-                /* 横幅を狭くするポイント */
-                gap: 24px;
-            }
-
-            .quadrant {
-                padding: 20px;
-            }
-
-            .quadrant h2 {
-                font-size: 18px;
-            }
-
-            .card .due,
-            .card .title,
-            .card .memo {
-                font-size: 15px;
-            }
-        }
-
-        /* ---- modal ---- */
-        .modal-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.45);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            padding: 16px;
-            z-index: 9999;
-        }
-
-        .modal-overlay.is-open {
-            display: flex;
-        }
-
-        .modal {
-            width: min(720px, 100%);
-            background: #fff;
-            border-radius: 12px;
-            padding: 14px 16px 16px;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
-            text-align: left;
-        }
-
-        .modal-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 10px;
-        }
-
-        .modal-close {
-            border: none;
-            background: transparent;
-            font-size: 22px;
-            cursor: pointer;
         }
 
         /* =========================
-   タスク登録アコーディオン
+   6.タスク登録アコーディオン
    ========================= */
 
         /* 外枠（見た目はお好みで調整OK） */
@@ -457,23 +402,8 @@ $tasks_q4 = fetchTasksByQuadrant($pdo, $today, 0, 0); // 重要でない×緊急
             display: block;
         }
 
-        /* ------- PC/タブレット：折りたたみOFF ------- */
-        @media (min-width: 768px) {
-
-            /* ヘッダーは表示しない（記号が謎にならない） */
-            .task-accordion__header {
-                display: none;
-            }
-
-            /* フォームは常に表示（is-open有無に関係なく） */
-            .task-accordion__body {
-                display: block;
-            }
-        }
-
-
         /* =========================
-   サブボタン（完了済みリンク用）
+   7.サブボタン（完了済みリンク用）
    ========================= */
 
         .completed-link-wrap {
@@ -507,44 +437,90 @@ $tasks_q4 = fetchTasksByQuadrant($pdo, $today, 0, 0); // 重要でない×緊急
             box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.10);
         }
 
+        /* =========================
+   8.モーダル
+   ========================= */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.45);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+            z-index: 9999;
+        }
 
+        .modal-overlay.is-open {
+            display: flex;
+        }
 
-
-        /* ボタンとカードクリックの干渉を減らす（押しやすさ）
-        .card .btn-done {
-            cursor: pointer;
-        } */
-        /* ボタンはボタンで押せる感 */
-
-
-        /* body {
-            background-color: #f6f6f6;
-            font-family: sans-serif;
-            padding: 20px;
-        } */
-
-
-        /* .quadrant {
+        .modal {
+            width: min(720px, 100%);
+            background: #fff;
             border-radius: 12px;
-            padding: 20px;
-            color: #333;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        } */
+            padding: 14px 16px 16px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+            text-align: left;
+        }
+
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .modal-close {
+            border: none;
+            background: transparent;
+            font-size: 22px;
+            cursor: pointer;
+        }
+
+        /* =========================
+   9.メディアクエリ（768→1200）
+   ========================= */
+
+        /* ------- PC/タブレット：折りたたみOFF ------- */
+        @media (min-width: 768px) {
+
+            /* ヘッダーは表示しない（記号が謎にならない） */
+            .task-accordion__header {
+                display: none;
+            }
+
+            /* フォームは常に表示（is-open有無に関係なく） */
+            .task-accordion__body {
+                display: block;
+            }
+        }
 
 
+        /* ---------------------- */
+        /* PC：幅を絞って中央寄せ */
+        /* ---------------------- */
+        @media (min-width: 1200px) {
+            .matrix {
+                max-width: 1000px;
+                /* 横幅を狭くするポイント */
+                gap: 24px;
+            }
 
+            .quadrant {
+                padding: 20px;
+            }
 
+            .quadrant h2 {
+                font-size: 18px;
+            }
 
-        /*
-        削除候補
-        .button {
-            display: inline-block;
-            background-color: #2E8B57;
-            color: white;
-            padding: 6px 12px;
-            border-radius: 6px;
-            margin-top: 10px;
-        } */
+            .card .due,
+            .card .title,
+            .card .memo {
+                font-size: 15px;
+            }
+        }
     </style>
 </head>
 
