@@ -203,7 +203,7 @@ $c4 = count($buckets['q4']);
         }
 
         .title {
-            aijiyu font-weight: 700;
+            font-weight: 700;
         }
 
         .memo {
