@@ -699,7 +699,7 @@ function renderQuadrant(string $key, array $q, string $today): void
             <!-- タイトル＋閉じる -->
             <div class="modal-header">
                 <h3>タスクを編集</h3>
-                <button type="button" id="modalClose">×</button>
+                <button type="button" id="modalClose" class="modal-close">×</button>
             </div>
 
             <!-- 更新用フォーム -->
@@ -708,21 +708,22 @@ function renderQuadrant(string $key, array $q, string $today): void
                 <!-- どのタスクかを識別するID -->
                 <input type="hidden" name="id" id="edit_id">
 
-                <label>タスク名</label>
+                <label for="edit_title">タスク名</label>
                 <input type="text" name="title" id="edit_title">
 
-                <label>メモ（全文）</label>
+                <label for="edit_memo">メモ（全文）</label>
                 <textarea name="memo" id="edit_memo"></textarea>
 
                 <label>重要度</label>
-                <input type="radio" name="is_important" value="1" id="edit_imp_1">重要
-                <input type="radio" name="is_important" value="0" id="edit_imp_0">重要でない
+
+                <label> <input type="radio" name="is_important" value="1" id="edit_imp_1"><span>重要</span></label>
+                <label><input type="radio" name="is_important" value="0" id="edit_imp_0"><span>重要でない</span></label>
 
                 <label>緊急度</label>
-                <input type="radio" name="is_urgent" value="1" id="edit_urg_1">緊急
-                <input type="radio" name="is_urgent" value="0" id="edit_urg_0">緊急でない
+                <label><input type="radio" name="is_urgent" value="1" id="edit_urg_1"><span>緊急</span></label>
+                <label><input type="radio" name="is_urgent" value="0" id="edit_urg_0"><span>緊急でない</span></label>
 
-                <label>期日</label>
+                <label for="edit_due">期日</label>
                 <input type="date" name="due_date" id="edit_due">
 
                 <button type="submit">更新</button>
@@ -751,13 +752,28 @@ function renderQuadrant(string $key, array $q, string $today): void
         // ==============================
         function openModal() {
             modal.classList.add('is-open');
+            modal.setAttribute('aria-hidden', 'false');
         }
 
         function closeModal() {
             modal.classList.remove('is-open');
+            modal.setAttribute('aria-hidden', 'true');
         }
 
         closeBtn.addEventListener('click', closeModal);
+
+
+        //  追加理由：スマホで閉じやすくする、誤操作時の回復手段を増やす（UX改善）
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) closeModal(); // 背景クリック
+        });
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && modal.classList.contains('is-open'))
+                closeModal();
+        });
+        // カードクリック → 編集（ただし「完了ボタン周り」は除外）
+
+
 
         // ==============================
         // 各タスクカードにクリックイベントを付ける
@@ -766,16 +782,16 @@ function renderQuadrant(string $key, array $q, string $today): void
 
             card.addEventListener('click', (e) => {
 
-                // 完了ボタンを押した時は編集しない
-                if (e.target.closest('form')) return;
+                if (e.target.closest('.js-no-modal')) return; // 完了ボタン
+                if (e.target.closest('form')) return; //念のため form 全体も
 
                 // --------------------------
                 // card の data-* を取得
                 // --------------------------
                 editId.value = card.dataset.id;
-                editTitle.value = card.dataset.title;
-                editMemo.value = card.dataset.memo;
-                editDue.value = card.dataset.due;
+                editTitle.value = card.dataset.title || '';
+                editMemo.value = card.dataset.memo || '';
+                editDue.value = card.dataset.due || '';
 
                 // ラジオボタンの切り替え
                 (card.dataset.imp === '1' ? imp1 : imp0).checked = true;
