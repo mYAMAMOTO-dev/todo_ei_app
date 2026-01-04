@@ -499,45 +499,146 @@ function renderQuadrant(string $key, array $q, string $today): void
             box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.10);
         }
 
+
         /* =========================
    8.モーダル
    ========================= */
+
+        /* overlayは現状OK。横スクロール事故だけ予防 */
         .modal-overlay {
             position: fixed;
             inset: 0;
             background: rgba(0, 0, 0, 0.45);
+
             display: none;
+            /* 初期は非表示 */
             align-items: center;
             justify-content: center;
             padding: 16px;
+
             z-index: 9999;
+            /* 前面に */
+            overflow-x: hidden;
+            /* 横スクロール事故予防 */
         }
 
+        /* 開いた時だけ表示 */
         .modal-overlay.is-open {
             display: flex;
         }
 
+
+
+        /* モーダル本体を「白い箱」にする */
         .modal {
             width: min(720px, 100%);
+            max-height: calc(100vh - 32px);
+
             background: #fff;
-            border-radius: 12px;
-            padding: 14px 16px 16px;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
-            text-align: left;
+            /* ←これが “背景” */
+            border-radius: 14px;
+            padding: 16px 18px 18px;
+            /* 内側余白 */
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
+
+            display: flex;
+            flex-direction: column;
+
+            overflow: hidden;
+            /* 角丸を効かせる（中身がはみ出さない） */
         }
 
+        /* ヘッダーの区切り */
         .modal-header {
             display: flex;
             align-items: center;
             justify-content: space-between;
+            gap: 12px;
+
+            padding-bottom: 10px;
             margin-bottom: 10px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.10);
         }
 
+        /* 閉じるボタンを“ボタンっぽく” */
         .modal-close {
-            border: none;
-            background: transparent;
-            font-size: 22px;
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            border: 1px solid rgba(0, 0, 0, 0.15);
+            background: #fff;
             cursor: pointer;
+        }
+
+        /* フォームを縦並びにして読みやすく */
+        .modal>form {
+            flex: 1 1 auto;
+            min-height: 0;
+
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        /* labelをブロック化（横に回り込ませない） */
+        .modal>form label {
+            display: block;
+            text-align: left;
+            font-weight: 600;
+            font-size: 13px;
+            margin-top: 6px;
+        }
+
+        /* input/textarea を「箱幅いっぱい」に */
+        .modal>form input[type="text"],
+        .modal>form input[type="date"],
+        .modal>form textarea {
+            width: 100%;
+            max-width: 100%;
+            padding: 10px 12px;
+            border: 1px solid rgba(0, 0, 0, 0.16);
+            border-radius: 10px;
+        }
+
+        /* memoは縦スクロール（横スクロールなし） */
+        .modal>form textarea {
+            flex: 1 1 auto;
+            min-height: 220px;
+            max-height: 55vh;
+
+            overflow-y: auto;
+            overflow-x: hidden;
+            resize: vertical;
+
+            white-space: pre-wrap;
+            overflow-wrap: anywhere;
+            word-break: break-word;
+        }
+
+        .modal-radio {
+            margin-top: 8px;
+            text-align: left;
+        }
+
+        .modal-radio>label:first-child {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        .modal-radio>label:not(:first-child) {
+            display: inline-flex;
+            align-items: center;
+            justify-content: flex-start;
+            /* ← 左寄せの決定打 */
+            gap: 6px;
+            margin-right: 18px;
+            margin-left: 0;
+        }
+
+        /* 念のため：input/span側も中央寄せを解除 */
+        .modal-radio input[type="radio"] {
+            margin-left: 0;
         }
 
         /* =========================
@@ -714,19 +815,46 @@ function renderQuadrant(string $key, array $q, string $today): void
                 <label for="edit_memo">メモ（全文）</label>
                 <textarea name="memo" id="edit_memo"></textarea>
 
-                <label>重要度</label>
+                <div class="modal-radio">
+                    <label>重要度</label>
+                    <label>
+                        <input type="radio" name="is_important" value="1" id="edit_imp_1">
+                        <span>重要</span>
+                    </label>
+                    <label>
+                        <input type="radio" name="is_important" value="0" id="edit_imp_0">
+                        <span>重要でない</span>
+                    </label>
+                </div>
+
+                <div class="modal-radio">
+                    <label>緊急度</label>
+                    <label>
+                        <input type="radio" name="is_urgent" value="1" id="edit_urg_1">
+                        <span>緊急</span>
+                    </label>
+                    <label>
+                        <input type="radio" name="is_urgent" value="0" id="edit_urg_0">
+                        <span>緊急でない</span>
+                    </label>
+                </div>
+
+
+
+                <!-- <label>重要度</label>
 
                 <label> <input type="radio" name="is_important" value="1" id="edit_imp_1"><span>重要</span></label>
                 <label><input type="radio" name="is_important" value="0" id="edit_imp_0"><span>重要でない</span></label>
 
                 <label>緊急度</label>
                 <label><input type="radio" name="is_urgent" value="1" id="edit_urg_1"><span>緊急</span></label>
-                <label><input type="radio" name="is_urgent" value="0" id="edit_urg_0"><span>緊急でない</span></label>
+                <label><input type="radio" name="is_urgent" value="0" id="edit_urg_0"><span>緊急でない</span></label> -->
 
                 <label for="edit_due">期日</label>
                 <input type="date" name="due_date" id="edit_due">
 
-                <button type="submit">更新</button>
+                <div class="form-row-submit">
+                    <button type="submit">更新</button>
             </form>
         </div>
     </div>
