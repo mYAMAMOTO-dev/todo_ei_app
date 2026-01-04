@@ -507,11 +507,6 @@ $tasks_q4 = fetchTasksByQuadrant($pdo, $today, 0, 0); // 重要でない×緊急
                 font-size: 18px;
             }
 
-            /* .card .due,
-            .card .title,
-            .card .memo {
-                font-size: 15px;
-            } */
         }
     </style>
 </head>
