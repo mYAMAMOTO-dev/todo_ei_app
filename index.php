@@ -477,12 +477,7 @@ $tasks_q4 = fetchTasksByQuadrant($pdo, $today, 0, 0); // 重要でない×緊急
                 font-size: 17px;
             }
 
-        }
-
-        /* ------- PC/タブレット：折りたたみOFF ------- */
-        @media (min-width: 768px) {
-
-            /* ヘッダーは表示しない（記号が謎にならない） */
+            /* ------- PC/タブレット：ヘッダー折りたたみOFF ------- */
             .task-accordion__header {
                 display: none;
             }
