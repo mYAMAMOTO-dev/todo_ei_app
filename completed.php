@@ -1,6 +1,23 @@
 <?php
 // completed.php（完了済み一覧）
 
+function h(?string $v): string
+{
+    return htmlspecialchars((string)$v, ENT_QUOTES, 'UTF-8');
+}
+function hDate(?string $v): string
+{
+    return $v ? h($v) : '';
+}
+
+function buildQuery(array $base, array $override = []): string
+{
+    $q = array_merge($base, $override);
+    // 空文字はURLから消す（見た目が綺麗＆余計な条件を送らない）
+    $q = array_filter($q, fn($v) => $v !== '');
+    return http_build_query($q);
+}
+
 // 検索条件（GET）
 $start = $_GET['start'] ?? '';  // 例: 2025-12-01
 $end   = $_GET['end'] ?? '';    // 例: 2025-12-31
@@ -95,17 +112,23 @@ if ($end !== '') {
 }
 
 // 象限（is_important / is_urgent で検索）
-if ($q === 'q1') {
-    $where .= " AND is_important=1 AND is_urgent=1";
-}
-if ($q === 'q2') {
-    $where .= " AND is_important=1 AND is_urgent=0";
-}
-if ($q === 'q3') {
-    $where .= " AND is_important=0 AND is_urgent=1";
-}
-if ($q === 'q4') {
-    $where .= " AND is_important=0 AND is_urgent=0";
+
+switch ($q) {
+    case 'q1':
+        $where .= " AND is_important=1 AND is_urgent=1";
+        break;
+    case 'q2':
+        $where .= " AND is_important=1 AND is_urgent=0";
+        break;
+    case 'q3':
+        $where .= " AND is_important=0 AND is_urgent=1";
+        break;
+    case 'q4':
+        $where .= " AND is_important=0 AND is_urgent=0";
+        break;
+    default:
+        // all のときは追加しない
+        break;
 }
 
 $sql = "
@@ -226,57 +249,79 @@ $c4 = count($buckets['q4']);
 
 <body>
     <div class="wrapper">
-        <div class="toplink"><a href="index.php">← メインに戻る</a></div>
         <h1>完了済みタスク</h1>
 
-        <!-- 検索ホーム -->
-        <form method="get" style="margin:12px 0;">
-            <label>開始日:
-                <input type="date" name="start" value="<?php echo htmlspecialchars($start, ENT_QUOTES); ?>">
-            </label>
-            <label>終了日:
-                <input type="date" name="end" value="<?php echo htmlspecialchars($end, ENT_QUOTES); ?>">
-            </label>
+        <p class="completed-link-wrap">
+            <a href="index.php" class="btn-sub">← メインに戻る</a>
+        </p>
 
+        <?php
+        // フォームの現在状態をベースにしたクエリ（短縮ボタンで使う）
+        $baseQuery = [
+            'q' => $q,
+            'start' => $start,
+            'end' => $end,
+        ];
+        ?>
 
-            <!-- 「今日 / 1週間 / 1ヶ月/全期間」短縮ボタンを作る（今日含む）アクティブは強調 -->
-            <div style="margin:12px 0;">
+        <form method="get" class="task-form">
+
+            <!-- 開始日 -->
+            <div class="form-row">
+                <label for="start">開始日</label>
+                <input id="start" type="date" name="start" value="<?php echo h($start); ?>">
+            </div>
+
+            <!-- 終了日 -->
+            <div class="form-row">
+                <label for="end">終了日</label>
+                <input id="end" type="date" name="end" value="<?php echo h($end); ?>">
+            </div>
+
+            <!-- 短縮ボタン（プリセット） -->
+            <div class="form-row">
+
                 <a class="<?php echo ($activePreset === 'today') ? 'is-active' : ''; ?>"
-                    href="completed.php?preset=today&q=<?php echo htmlspecialchars($q, ENT_QUOTES); ?>">今日</a>
+                    href="completed.php?<?php echo h(buildQuery($baseQuery, ['preset' => 'today'])); ?>">今日</a>
 
                 <a class="<?php echo ($activePreset === 'week') ? 'is-active' : ''; ?>"
-                    href="completed.php?preset=week&q=<?php echo htmlspecialchars($q, ENT_QUOTES); ?>">1週間</a>
+                    href="completed.php?<?php echo h(buildQuery($baseQuery, ['preset' => 'week'])); ?>">1週間</a>
 
                 <a class="<?php echo ($activePreset === 'month') ? 'is-active' : ''; ?>"
-                    href="completed.php?preset=month&q=<?php echo htmlspecialchars($q, ENT_QUOTES); ?>">1ヶ月</a>
+                    href="completed.php?<?php echo h(buildQuery($baseQuery, ['preset' => 'month'])); ?>">1ヶ月</a>
 
                 <a class="<?php echo ($activePreset === 'all') ? 'is-active' : ''; ?>"
-                    href="completed.php?preset=all&q=<?php echo htmlspecialchars($q, ENT_QUOTES); ?>">全期間</a>
+                    href="completed.php?<?php echo h(buildQuery($baseQuery, ['preset' => 'all'])); ?>">全期間</a>
 
                 <?php if ($activePreset === 'custom'): ?>
-                    <span style="margin-left:8px;">（カスタム）</span>
+                    <span>（カスタム）</span>
                 <?php endif; ?>
             </div>
 
-            <!-- 「現在：〇〇」を常に表示 -->
-            <div style="margin:6px 0 10px;">
-                現在：<?php echo htmlspecialchars($modeLabel, ENT_QUOTES); ?>
-                （<?php echo htmlspecialchars($start ?: '未指定', ENT_QUOTES); ?> 〜 <?php echo htmlspecialchars($end ?: '未指定', ENT_QUOTES); ?>）
+            <!-- 現在の条件表示（常に表示） -->
+            <div class="form-row">
+                現在：<?php echo h($modeLabel); ?>
+                （<?php echo h($start ?: '未指定'); ?> 〜 <?php echo h($end ?: '未指定'); ?>）
             </div>
 
+            <!-- 象限 -->
+            <div class="form-row">
+                <label>象限:
+                    <select name="q">
+                        <option value="all" <?php echo $q === 'all' ? 'selected' : ''; ?>>すべて</option>
+                        <option value="q1" <?php echo $q === 'q1' ? 'selected' : ''; ?>>すぐやる（重要×緊急）</option>
+                        <option value="q2" <?php echo $q === 'q2' ? 'selected' : ''; ?>>計画してやる（重要×緊急でない）</option>
+                        <option value="q3" <?php echo $q === 'q3' ? 'selected' : ''; ?>>任せる（緊急×重要でない）</option>
+                        <option value="q4" <?php echo $q === 'q4' ? 'selected' : ''; ?>>やらない（重要でない×緊急でない）</option>
+                    </select>
+                </label>
+            </div>
 
-            <label>象限:
-                <select name="q">
-                    <option value="all" <?php echo $q === 'all' ? 'selected' : ''; ?>>すべて</option>
-                    <option value="q1" <?php echo $q === 'q1' ? 'selected' : ''; ?>>すぐやる（重要×緊急）</option>
-                    <option value="q2" <?php echo $q === 'q2' ? 'selected' : ''; ?>>計画してやる（重要×緊急でない）</option>
-                    <option value="q3" <?php echo $q === 'q3' ? 'selected' : ''; ?>>任せる（緊急×重要でない）</option>
-                    <option value="q4" <?php echo $q === 'q4' ? 'selected' : ''; ?>>やらない（重要でない×緊急でない）</option>
-                </select>
-            </label>
+            <div class="form-row-submit">
+                <button type="submit">検索</button>
+                <a href="completed.php" class="btn-sub" style="margin-left:8px;">リセット</a>
+            </div>
 
-            <button type="submit">検索</button>
-            <a href="completed.php" style="margin-left:8px;">リセット</a>
         </form>
 
 
@@ -307,17 +352,19 @@ $c4 = count($buckets['q4']);
                 <?php else: ?>
                     <?php foreach ($buckets[$key] as $t): ?>
                         <div class="item">
-                            <div class="title"><?php echo htmlspecialchars($t['title'], ENT_QUOTES, 'UTF-8'); ?></div>
+                            <div class="title"><?php echo h($t['title'] ?? ''); ?>
+                            </div>
                             <div class="meta">
-                                期日: <?php echo htmlspecialchars($t['due_date'] ?? '-', ENT_QUOTES, 'UTF-8'); ?>
-                                ／ 完了: <?php echo htmlspecialchars($t['deleted_at'], ENT_QUOTES, 'UTF-8'); ?>
+                                期日: <?php echo h($t['due_date'] ?? '-'); ?>
+                                ／ 完了: <?php echo h($t['deleted_at'] ?? ''); ?>
+
                             </div>
                             <?php if (!empty($t['memo'])): ?>
-                                <div class="memo"><?php echo htmlspecialchars($t['memo'], ENT_QUOTES, 'UTF-8'); ?></div>
+                                <div class="memo"><?php echo h($t['memo']); ?></div>
                             <?php endif; ?>
 
+
                             <!-- 既に付けた「未完了に戻す」ボタンはここに置いたままでOK -->
-                            <!-- 戻すボタン追加 -->
                             <form action="restore_task.php" method="post" style="margin-top:8px;">
                                 <input type="hidden" name="id" value="<?php echo (int)$t['id']; ?>">
                                 <button type="submit"
