@@ -1,22 +1,36 @@
-<!-- 4象限に表示（Read） -->
-
 <?php
+// PHP の 型の「ゆるさ」と厳格さの切り替え
+declare(strict_types=1);
+
 // ==============================
-// セッション開始
-// ==============================
-session_start();
-// ==============================
-// バリデーションエラーや入力値の復元用
+// 1) セッション（フォーム復元用）
 // （create_task.php から戻ってきた時用）
 // ==============================
+session_start();
 
 $form_errors = $_SESSION['form_errors'] ?? [];
 $form_inputs = $_SESSION['form_inputs'] ?? [];
 // 使い終わったら消す
 unset($_SESSION['form_errors'], $_SESSION['form_inputs']);
 
+// ==============================
+// 2) ヘルパー
+// XSS対策を１箇所にまとめる
+// ==============================
+function h(?string $v): string
+{
+    return htmlspecialchars((string)$v, ENT_QUOTES, 'UTF-8');
+}
 
-// DB接続
+// 日付用（NULL/空なら空文字を返す）
+function hDate(?string $v): string
+{
+    return $v ? h($v) : '';
+}
+
+// ==============================
+// 3) DB接続
+// ==============================
 $dsn  = 'mysql:host=127.0.0.1;port=8889;dbname=eisenhower;charset=utf8mb4';
 $user = 'root';
 $pass = 'root';
@@ -31,9 +45,9 @@ $pdo = new PDO($dsn, $user, $pass, [
 $today = (new DateTime('now', new DateTimeZone('Asia/Tokyo')))->format('Y-m-d');
 
 
-/**
- * 象限ごとにタスクを取得する共通関数
- */
+// ==============================
+// 4) 象限タスク取得（共通）
+// ==============================
 function fetchTasksByQuadrant(
     PDO $pdo,
     string $today,
@@ -45,8 +59,9 @@ function fetchTasksByQuadrant(
     // 重要度・緊急度で象限を分ける
     // 期限切れ → 期日なし → 通常 の順で並び替え
 
+    // SELECT * を避け、必要なカラムだけに絞る
     $sql = "
-      SELECT *
+      SELECT id, title, memo, is_important, is_urgent, due_date, created_at
       FROM eisenhower_tasks
       WHERE deleted_at IS NULL
         AND is_important = :imp
@@ -73,13 +88,84 @@ function fetchTasksByQuadrant(
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
-// 各象限のタスクを取得
-$tasks_q1 = fetchTasksByQuadrant($pdo, $today, 1, 1); // 重要×緊急
-$tasks_q2 = fetchTasksByQuadrant($pdo, $today, 1, 0); // 重要×緊急でない
-$tasks_q3 = fetchTasksByQuadrant($pdo, $today, 0, 1); // 重要でない×緊急
-$tasks_q4 = fetchTasksByQuadrant($pdo, $today, 0, 0); // 重要でない×緊急でない
-?>
+// 4象限まとめて取得
+// ★整え版ではここを「1つの配列にまとめた」
+//    理由：4象限をループで描画できるようにしてHTML重複を消すため
+$quadrants = [
+    'q1' => [
+        'title' => 'すぐやる（重要 × 緊急）',
+        'imp' => 1,
+        'urg' => 1,
+        'tasks' => [],
+    ],
+    'q2' => [
+        'title' => '計画してやる（重要 × 緊急でない）',
+        'imp' => 1,
+        'urg' => 0,
+        'tasks' => [],
+    ],
+    'q3' => [
+        'title' => '任せる（緊急 × 重要でない）',
+        'imp' => 0,
+        'urg' => 1,
+        'tasks' => [],
+    ],
+    'q4' => [
+        'title' => 'やらない（重要でない × 緊急でない）',
+        'imp' => 0,
+        'urg' => 0,
+        'tasks' => [],
+    ],
+];
 
+foreach ($quadrants as $key => $q) {
+    $quadrants[$key]['tasks'] = fetchTasksByQuadrant($pdo, $today, $q['imp'], $q['urg']);
+}
+
+// ==============================
+// 5) 象限描画（重複排除）
+// ==============================
+function renderQuadrant(string $key, array $q, string $today): void
+{
+    $tasks = $q['tasks'];
+?>
+    <section class="quadrant <?php echo h($key); ?>">
+        <h2><?php echo h($q['title']); ?></h2>
+
+        <?php if (empty($tasks)): ?>
+            <p>タスクはありません</p>
+        <?php else: ?>
+            <?php foreach ($tasks as $task): ?>
+                <?php
+                $due = $task['due_date'] ?? null;
+                $isOverdue = !empty($due) && $due < $today;
+                ?>
+                <div class="card<?php echo $isOverdue ? ' expired' : ''; ?>"
+                    data-id="<?php echo (int)$task['id']; ?>"
+                    data-title="<?php echo h($task['title'] ?? ''); ?>"
+                    data-memo="<?php echo h($task['memo'] ?? ''); ?>"
+                    data-due="<?php echo hDate($due); ?>"
+                    data-imp="<?php echo (int)$task['is_important']; ?>"
+                    data-urg="<?php echo (int)$task['is_urgent']; ?>">
+
+                    <div class="due">期日: <?php echo hDate($due); ?></div>
+                    <div class="title"><?php echo h($task['title'] ?? ''); ?></div>
+                    <div class="memo"><?php echo h($task['memo'] ?? ''); ?></div>
+
+                    <form action="complete_task.php" method="post">
+                        <input type="hidden" name="id" value="<?php echo (int)$task['id']; ?>">
+                        <button
+                            type="submit"
+                            class="button btn-done js-no-modal"
+                            onclick="return confirm('完了にしますか？')">完了</button>
+                    </form>
+                </div>
+            <?php endforeach; ?>
+        <?php endif; ?>
+    </section>
+<?php
+}
+?>
 
 <!DOCTYPE html>
 <html lang="ja">
@@ -87,6 +173,8 @@ $tasks_q4 = fetchTasksByQuadrant($pdo, $today, 0, 0); // 重要でない×緊急
 <head>
     <meta charset="UTF-8">
     <title>アイゼンハワーマトリクス</title>
+    <!-- ここは将来：style.css に外出し推奨（completed.phpと統一しやすい） -->
+    <!-- 今はあなたのCSS（完成版）をここに置くか、linkにする -->
     <style>
         /* =========================
    1.リセット/共通
@@ -488,7 +576,6 @@ $tasks_q4 = fetchTasksByQuadrant($pdo, $today, 0, 0); // 重要でない×緊急
             }
         }
 
-
         /* ---------------------- */
         /* PC：幅を絞って中央寄せ */
         /* ---------------------- */
@@ -509,6 +596,7 @@ $tasks_q4 = fetchTasksByQuadrant($pdo, $today, 0, 0); // 重要でない×緊急
 
         }
     </style>
+
 </head>
 
 <body>
@@ -527,7 +615,6 @@ $tasks_q4 = fetchTasksByQuadrant($pdo, $today, 0, 0); // 重要でない×緊急
                     <!-- タスク名 -->
                     <div class="form-row">
                         <label for="title">タスク名<span class="required">*</span></label>
-                        <!-- <input type="text" id="title" name="title" maxlength="24" required> -->
                         <input type="text"
                             id="title"
                             name="title"
@@ -537,15 +624,15 @@ $tasks_q4 = fetchTasksByQuadrant($pdo, $today, 0, 0); // 重要でない×緊急
 
                         <?php if (!empty($form_errors['title'])): ?>
                             <div class="field-error">
-                                <?php echo htmlspecialchars($form_errors['title'], ENT_QUOTES); ?>
-                            </div>
+                                <?php echo h($form_errors['title']); ?></div>
                         <?php endif; ?>
                     </div>
 
                     <!-- メモ -->
                     <div class="form-row">
                         <label for="memo">メモ</label>
-                        <textarea id="memo" name="memo" rows="2"><?php echo htmlspecialchars($form_inputs['memo'] ?? '', ENT_QUOTES); ?></textarea>
+                        <textarea id="memo" name="memo" rows="2">
+                            <?php echo h($form_inputs['memo'] ?? ''); ?></textarea>
                     </div>
 
                     <!-- 重要 -->
@@ -566,16 +653,16 @@ $tasks_q4 = fetchTasksByQuadrant($pdo, $today, 0, 0); // 重要でない×緊急
                     <div class="form-row">
                         <label for="due_date">期日<span class="required">*</span></label>
                         <!-- Chromeでの手入力がYYYYYY/MM/DDになる。SafariではYYYY/MM/DD。1回目はこのまま進めて、JS導入時に修正する2025/12/28 -->
-                        <!-- <input type="date" id="due_date" name="due_date" required> -->
+
                         <input type="date"
                             id="due_date"
                             name="due_date"
-                            value="<?php echo htmlspecialchars($form_inputs['due_date'] ?? '', ENT_QUOTES); ?>"
+                            value="<?php echo h($form_inputs['due_date'] ?? ''); ?>"
                             required>
 
                         <?php if (!empty($form_errors['due_date'])): ?>
                             <div class="field-error">
-                                <?php echo htmlspecialchars($form_errors['due_date'], ENT_QUOTES); ?>
+                                <?php echo h($form_errors['due_date']); ?>
                             </div>
                         <?php endif; ?>
 
@@ -593,6 +680,7 @@ $tasks_q4 = fetchTasksByQuadrant($pdo, $today, 0, 0); // 重要でない×緊急
                 <a href="completed.php" class="btn-sub">完了済みタスクを見る</a>
             </p>
 
+            <!-- 4象限 -->
             <div class="matrix">
 
                 <!-- Q1：すぐやる（重要×緊急） -->
