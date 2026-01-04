@@ -31,4 +31,25 @@ $stmt->execute();
 
 // 4) 完了ページへ戻る
 header('Location: completed.php');
+
+
+// POSTでもらった条件（無ければ空）
+$start  = $_POST['start']  ?? '';
+$end    = $_POST['end']    ?? '';
+$q      = $_POST['q']      ?? 'all';
+$preset = $_POST['preset'] ?? '';
+
+// completed.php に戻すURLを組み立て
+$params = [];
+if ($start !== '')  $params['start']  = $start;
+if ($end !== '')    $params['end']    = $end;
+if ($q !== '')      $params['q']      = $q;
+if ($preset !== '' && $preset !== 'custom') $params['preset'] = $preset;
+
+$qs = http_build_query($params);
+$backUrl = 'completed.php' . ($qs ? ('?' . $qs) : '');
+
+header('Location: ' . $backUrl);
+
+
 exit;

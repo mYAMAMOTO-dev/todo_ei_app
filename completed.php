@@ -247,6 +247,7 @@ $c4 = count($buckets['q4']);
             margin-top: 4px;
             white-space: pre-wrap;
             overflow-wrap: anywhere;
+            text-align: left;
         }
 
         .empty {
@@ -257,6 +258,10 @@ $c4 = count($buckets['q4']);
         .is-active {
             font-weight: 700;
             text-decoration: underline;
+        }
+
+        .card {
+            text-align: left;
         }
     </style>
 </head>
@@ -358,36 +363,62 @@ $c4 = count($buckets['q4']);
             ];
             ?>
 
-            <?php foreach (['q1', 'q2', 'q3', 'q4'] as $key): ?>
-                <h2 style="margin:14px 0 8px;"><?php echo $labels[$key]; ?>（<?php echo count($buckets[$key]); ?>件）</h2>
+            <?php
+            // まずQ1だけ確認する（重要×緊急）
+            $key = 'q1';
+            ?>
 
-                <?php if (empty($buckets[$key])): ?>
-                    <div class="empty">該当なし</div>
-                <?php else: ?>
-                    <?php foreach ($buckets[$key] as $t): ?>
-                        <div class="item">
-                            <div class="title"><?php echo h($t['title'] ?? ''); ?>
-                            </div>
-                            <div class="meta">
-                                期日: <?php echo h($t['due_date'] ?? '-'); ?>
-                                ／ 完了: <?php echo h($t['deleted_at'] ?? ''); ?>
+            <h2 style="margin:14px 0 8px;">
+                <?php echo h($labels[$key]); ?>（<?php echo count($buckets[$key]); ?>件）
+            </h2>
 
-                            </div>
-                            <?php if (!empty($t['memo'])): ?>
-                                <div class="memo"><?php echo h($t['memo']); ?></div>
-                            <?php endif; ?>
-
-
-                            <!-- 既に付けた「未完了に戻す」ボタンはここに置いたままでOK -->
-                            <form action="restore_task.php" method="post" style="margin-top:8px;">
-                                <input type="hidden" name="id" value="<?php echo (int)$t['id']; ?>">
-                                <button type="submit"
-                                    onclick="return confirm('未完了に戻しますか？')">未完了に戻す</button>
-                            </form>
+            <?php if (empty($buckets[$key])): ?>
+                <p class="empty">該当なし</p>
+            <?php else: ?>
+                <?php foreach ($buckets[$key] as $t): ?>
+                    <?php
+                    // 期限切れ表示（完了済みでも「期日が過去」は目印になる）
+                    $isOverdue = !empty($t['due_date']) && $t['due_date'] < $today;
+                    ?>
+                    <div class="card<?php echo $isOverdue ? ' expired' : ''; ?>">
+                        <!-- indexと同じ並び：due → title → memo -->
+                        <div class="due">
+                            期日: <?php echo h($t['due_date'] ?? '-'); ?>
                         </div>
-                    <?php endforeach; ?>
-                <?php endif; ?>
-            <?php endforeach; ?>
+
+                        <div class="title">
+                            <?php echo h($t['title'] ?? ''); ?>
+                        </div>
+
+                        <?php if (!empty($t['memo'])): ?>
+                            <div class="memo">
+                                <?php echo h($t['memo']); ?>
+                            </div>
+                        <?php endif; ?>
+
+                        <!-- 完了済み専用：完了日時 -->
+                        <div class="meta">
+                            完了: <?php echo h($t['deleted_at'] ?? ''); ?>
+                        </div>
+
+                        <!-- 右下固定は次ステップ（まずは動くこと優先） -->
+
+                        <form action="restore_task.php" method="post" style="margin-top:8px;">
+                            <input type="hidden" name="id" value="<?php echo (int)$t['id']; ?>">
+
+                            <!-- ★現在の検索条件を保持する -->
+                            <input type="hidden" name="start" value="<?php echo h($start); ?>">
+                            <input type="hidden" name="end" value="<?php echo h($end); ?>">
+                            <input type="hidden" name="q" value="<?php echo h($q); ?>">
+                            <input type="hidden" name="preset" value="<?php echo h($activePreset); ?>">
+
+                            <button type="submit" onclick="return confirm('未完了に戻しますか？')">未完了に戻す</button>
+                        </form>
+
+                    </div>
+                <?php endforeach; ?>
+            <?php endif; ?>
+
         </div>
     </div>
 </body>
