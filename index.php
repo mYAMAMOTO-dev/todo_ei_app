@@ -630,11 +630,9 @@ $tasks_q4 = fetchTasksByQuadrant($pdo, $today, 0, 0); // 重要でない×緊急
                                 <!-- 完了ボタンを “form POST” に -->
                                 <form action="complete_task.php" method="post">
                                     <input type="hidden" name="id" value="<?php echo (int)$task['id']; ?>">
-                                    <button type="submit" class="button btn-done">完了</button>
+                                    <button type="submit" class="button btn-done"
+                                        onclick="return confirm('完了にしますか？')">完了</button>
                                 </form>
-                                <!-- <button class="button btn-done" data-id="<?php echo (int)$task['id']; ?>">
-                            完了
-                        </button> -->
                             </div>
                         <?php endforeach; ?>
                     <?php endif; ?>
@@ -672,7 +670,8 @@ $tasks_q4 = fetchTasksByQuadrant($pdo, $today, 0, 0); // 重要でない×緊急
                                 </div>
                                 <form action="complete_task.php" method="post">
                                     <input type="hidden" name="id" value="<?php echo (int)$task['id']; ?>">
-                                    <button type="submit" class="button btn-done">完了</button>
+                                    <button type="submit" class="button btn-done"
+                                        onclick="return confirm('完了にしますか？')">完了</button>
                                 </form>
 
                             </div>
@@ -712,7 +711,8 @@ $tasks_q4 = fetchTasksByQuadrant($pdo, $today, 0, 0); // 重要でない×緊急
                                 </div>
                                 <form action="complete_task.php" method="post">
                                     <input type="hidden" name="id" value="<?php echo (int)$task['id']; ?>">
-                                    <button type="submit" class="button btn-done">完了</button>
+                                    <button type="submit" class="button btn-done"
+                                        onclick="return confirm('完了にしますか？')">完了</button>
                                 </form>
 
                             </div>
@@ -752,7 +752,8 @@ $tasks_q4 = fetchTasksByQuadrant($pdo, $today, 0, 0); // 重要でない×緊急
                                 </div>
                                 <form action="complete_task.php" method="post">
                                     <input type="hidden" name="id" value="<?php echo (int)$task['id']; ?>">
-                                    <button type="submit" class="button btn-done">完了</button>
+                                    <button type="submit" class="button btn-done"
+                                        onclick="return confirm('完了にしますか？')">完了</button>
                                 </form>
 
                             </div>
