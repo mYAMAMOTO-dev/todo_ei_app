@@ -1,6 +1,7 @@
 <?php
 // completed.php（完了済み一覧）
 
+
 function h(?string $v): string
 {
     return htmlspecialchars((string)$v, ENT_QUOTES, 'UTF-8');
@@ -261,7 +262,8 @@ $c4 = count($buckets['q4']);
         }
 
         .card {
-            text-align: left;
+            display: block;
+            width: 100%;
         }
     </style>
 </head>
@@ -399,6 +401,12 @@ $c4 = count($buckets['q4']);
                         <!-- 完了済み専用：完了日時 -->
                         <div class="meta">
                             完了: <?php echo h($t['deleted_at'] ?? ''); ?>
+
+
+                            / ID: <?php echo (int)$t['id']; ?>
+
+
+
                         </div>
 
                         <!-- 右下固定は次ステップ（まずは動くこと優先） -->
