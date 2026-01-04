@@ -762,34 +762,6 @@ $tasks_q4 = fetchTasksByQuadrant($pdo, $today, 0, 0); // 重要でない×緊急
 
                 <!-- Q2, Q3, Q4 も同じ構造で、使う配列だけ変える -->
             </div>
-
-            <!-- <div class="quadrant q1">
-                <h2>すぐやる（重要×緊急）</h2>
-                <div class="card expired">
-                    <div class="due">期日: 11/20</div>バグ修正対応<div class="button">完了</div>
-                </div>
-                <div class="card">
-                    <div class="due">期日: 11/25</div>会議資料作成<div class="button">完了</div>
-                </div>
-            </div> -->
-            <!-- <div class="quadrant q2">
-            <h2>計画してやる（重要×緊急でない）</h2>
-            <div class="card">
-                <div class="due">期日: 11/30</div>新機能設計メモ<div class="button">完了</div>
-            </div>
-        </div>
-        <div class="quadrant q3">
-            <h2>任せる（緊急×重要でない）</h2>
-            <div class="card">
-                <div class="due">期日: 11/28</div>データ入力依頼<div class="button">完了</div>
-            </div>
-        </div>
-        <div class="quadrant q4">
-            <h2>やらない（重要でない×緊急でない）</h2>
-            <div class="card">
-                <div class="due">期日: -</div>古いファイル整理<div class="button">完了</div>
-            </div>
-        </div> -->
         </div>
 
         <!-- =========================
