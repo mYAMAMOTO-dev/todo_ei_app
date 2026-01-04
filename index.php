@@ -834,12 +834,9 @@ function renderQuadrant(string $key, array $q, string $today): void
                 // is-open を反転
                 acc.classList.toggle('is-open');
 
-                // 記号も状態に合わせて切り替え
-                if (acc.classList.contains('is-open')) {
-                    accIcon.textContent = '−';
-                } else {
-                    accIcon.textContent = '＋';
-                }
+                // 記号も状態に合わせて切り替え　三項演算子
+                accIcon.textContent =
+                    acc.classList.contains('is-open') ? '−' : '＋';
             });
         }
     </script>
