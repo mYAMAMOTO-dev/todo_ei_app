@@ -86,7 +86,7 @@ $tasks_q4 = fetchTasksByQuadrant($pdo, $today, 0, 0); // 重要でない×緊急
 
 <head>
     <meta charset="UTF-8">
-    <title>アイゼンハワーマトリクス配色プレビュー</title>
+    <title>アイゼンハワーマトリクス</title>
     <style>
         .q1 {
             background-color: #FFCCCC;
@@ -201,7 +201,7 @@ $tasks_q4 = fetchTasksByQuadrant($pdo, $today, 0, 0); // 重要でない×緊急
         }
 
         /* =========================
-   タスクカード（.card）
+   4：タスクカード（.card）
    ========================= */
 
         /* ---------- 全カード共通（構造・ベース） ---------- */
