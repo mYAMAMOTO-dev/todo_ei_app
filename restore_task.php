@@ -29,10 +29,6 @@ $stmt = $pdo->prepare($sql);
 $stmt->bindValue(':id', $id, PDO::PARAM_INT);
 $stmt->execute();
 
-// 4) 完了ページへ戻る
-header('Location: completed.php');
-
-
 // POSTでもらった条件（無ければ空）
 $start  = $_POST['start']  ?? '';
 $end    = $_POST['end']    ?? '';
@@ -47,9 +43,7 @@ if ($q !== '')      $params['q']      = $q;
 if ($preset !== '' && $preset !== 'custom') $params['preset'] = $preset;
 
 $qs = http_build_query($params);
+// completed.php に戻すURL（条件付き）
 $backUrl = 'completed.php' . ($qs ? ('?' . $qs) : '');
-
 header('Location: ' . $backUrl);
-
-
 exit;

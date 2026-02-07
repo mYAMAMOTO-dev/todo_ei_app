@@ -319,6 +319,24 @@ function renderQuadrant(string $key, array $q, string $today): void
             /* ボタンとしての操作感 */
         }
 
+        /* --- 完了ボタンが消える事故の保険（追記） --- */
+
+        /* 1) hiddenでボタンが切れる事故を防ぐ */
+        .card {
+            overflow: visible;
+        }
+
+        /* 2) formの余白やレイアウト崩れでボタン位置がズレるのを防ぐ */
+        .card form {
+            margin: 0;
+        }
+
+        /* 3) 他スタイルに負けて表示されない事故を防ぐ */
+        .card .btn-done {
+            z-index: 2;
+        }
+
+
         /* ---------- カード内の特定パーツ（差分） ---------- */
         /* 期日：少し小さく、目立ちすぎない */
         .card .due {
@@ -645,6 +663,7 @@ function renderQuadrant(string $key, array $q, string $today): void
    9.メディアクエリ（768→1200）
    ========================= */
 
+
         /* ---------------------- */
         /* タブレット以上：2列    */
         /* ---------------------- */
@@ -695,6 +714,27 @@ function renderQuadrant(string $key, array $q, string $today): void
                 font-size: 18px;
             }
 
+        }
+
+        /* スマホ：アコーディオン内でフォームが途中で切れないようにする */
+        @media (max-width: 767px) {
+            .task-accordion__body {
+                height: auto !important;
+                max-height: none !important;
+                overflow: visible !important;
+                position: relative;
+                z-index: 1;
+            }
+
+            .task-accordion__body button[type="submit"] {
+                position: relative;
+                z-index: 2;
+            }
+
+            /* スマホでもカードの完了ボタンを確実に押せるようにする */
+            .card .btn-done {
+                pointer-events: auto;
+            }
         }
     </style>
 
@@ -968,7 +1008,6 @@ function renderQuadrant(string $key, array $q, string $today): void
             });
         }
     </script>
-
 </body>
 
 </html>
